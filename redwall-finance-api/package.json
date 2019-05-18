@@ -4,9 +4,14 @@
   "private": true,
   "description": "New Swagger API Project",
   "keywords": [],
-  "author": "",
-  "license": "",
+  "author": "Samuel Trong Tran <sln.t.tran@gmail.com>",
   "main": "app.js",
+  "repository": "git+https://github.com/stsquared99/redwall-finance.git",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/stsquared99/redwall-finance/issues"
+  },
+  "homepage": "https://github.com/stsquared99/redwall-finance#readme",
   "dependencies": {
     "connect": "^3.3.5",
     "swagger-connect": "^0.1.0"

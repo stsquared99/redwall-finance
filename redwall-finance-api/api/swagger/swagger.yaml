@@ -37,9 +37,27 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /users:
+    x-swagger-router-controller: users
+    get:
+      operationId: get
+      description: get the users list
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/GetUsersListResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /swagger:
     x-swagger-pipe: swagger_raw
 definitions:
+  GetUsersListResponse:
+    type: array
+    items:
+      $ref: "#/definitions/UserResponse"
   UserInfo:
     required:
       - firstName

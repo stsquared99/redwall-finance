@@ -37,6 +37,48 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /user/{userId}:
+    x-swagger-router-controller: user
+    delete:
+      operationId: remove
+      description: remove a user
+      parameters:
+        - name: userId
+          description: user ID
+          type: integer
+          in: path
+          required: true
+      responses:
+        "204":
+          description: No Content
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    put:
+      operationId: update
+      description: update a user
+      parameters:
+        - name: user
+          description: User properties
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/UserInfo"
+        - name: userId
+          description: user ID
+          type: integer
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/UserResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /users:
     x-swagger-router-controller: users
     get:
@@ -76,8 +118,8 @@ definitions:
       - firstName
       - lastName
       - email
-      - updatedAt
       - createdAt
+      - updatedAt
     properties:
       userId:
         type: integer
@@ -87,9 +129,9 @@ definitions:
         type: string
       email:
         type: string
-      updatedAt:
-        type: string
       createdAt:
+        type: string
+      updatedAt:
         type: string
   ErrorResponse:
     required:

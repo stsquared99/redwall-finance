@@ -16,10 +16,11 @@ function get(req, res) {
   ).then(
     users => res.json(users)
   ).catch(function(err) {
+    res.status(400);
+
     res.json({
       'message': err.name
     });
-    res.status(400);
 
     console.error(err);
   });

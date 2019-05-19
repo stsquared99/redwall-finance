@@ -72,14 +72,14 @@ definitions:
         type: string
   UserResponse:
     required:
-      - id
+      - userId
       - firstName
       - lastName
       - email
       - updatedAt
       - createdAt
     properties:
-      id:
+      userId:
         type: integer
       firstName:
         type: string

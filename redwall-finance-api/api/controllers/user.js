@@ -16,6 +16,8 @@ function add(req, res) {
   ).then(
     user => res.json(user.toJSON())
   ).catch(function(err) {
+    res.status(400);
+
     if (err.name === 'SequelizeUniqueConstraintError') {
       res.json({
         'message': 'Duplicate email'
@@ -24,7 +26,6 @@ function add(req, res) {
       res.json({
         'message': err.name
       });
-      res.status(400);
 
       console.error(err);
     }

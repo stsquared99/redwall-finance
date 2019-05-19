@@ -1,23 +1,25 @@
 {
   "development": {
-    "username": "postgres",
-    "password": "postgres",
     "database": "redwall_finance_development",
+    "dialect": "postgres",
     "host": "127.0.0.1",
-    "dialect": "postgres"
+    "password": "postgres",
+    "username": "postgres"
   },
   "test": {
-    "username": "postgres",
-    "password": "postgres",
     "database": "redwall_finance_test",
+    "dialect": "postgres",
     "host": "127.0.0.1",
-    "dialect": "postgres"
+    "logging": false,
+    "password": "postgres",
+    "username": "postgres"
   },
   "production": {
-    "username": "postgres",
-    "password": "postgres",
     "database": "redwall_finance_production",
+    "dialect": "postgres",
     "host": "127.0.0.1",
-    "dialect": "postgres"
+    "logging": false,
+    "password": "postgres",
+    "username": "postgres"
   }
 }

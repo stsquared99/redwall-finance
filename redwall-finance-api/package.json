@@ -18,17 +18,23 @@
     "jsfmt": "^0.5.3",
     "pg": "^7.11.0",
     "pg-hstore": "^2.3.2",
+    "pgtools": "^0.3.0",
     "sequelize": "^5.8.6",
     "sequelize-cli": "^5.4.0",
     "swagger-connect": "^0.1.0"
   },
   "devDependencies": {
     "should": "^7.1.0",
-    "supertest": "^1.0.0"
+    "supertest": "^1.0.0",
+    "z-schema": "^3.12.0",
+    "request": "^2.58.0",
+    "chai": "^3.0.0",
+    "mocha": "^2.2.5",
+    "dotenv": "^1.2.0"
   },
   "scripts": {
     "format": "jsfmt --write api models test ; jscs -x api models test",
     "start": "node app.js",
-    "test": "export NODE_ENV=test ; swagger project test"
+    "test": "dropdbjs redwall_finance_test --password=postgres ; createdbjs redwall_finance_test --password=postgres && export NODE_ENV=test ; swagger project test"
   }
 }

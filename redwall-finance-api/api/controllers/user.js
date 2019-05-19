@@ -38,7 +38,9 @@ function add(req, res) {
 function remove(req, res, next) {
   sequelize.sync().then(
     () => User.destroy({
-      where: {userId: req.swagger.params.userId.value}
+      where: {
+        userId: req.swagger.params.userId.value
+      }
     })
   ).then(function(data) {
     res.status(204);
@@ -59,9 +61,11 @@ function remove(req, res, next) {
 function update(req, res, next) {
   sequelize.sync().then(
     () => User.update(
-      req.swagger.params.user.value,{
+      req.swagger.params.user.value, {
         returning: true,
-        where: {userId: req.swagger.params.userId.value}
+        where: {
+          userId: req.swagger.params.userId.value
+        }
       }
     )
   ).then(function(data) {
@@ -71,9 +75,8 @@ function update(req, res, next) {
       res.json({
         'message': 'User not found'
       });
-    }
-    else {
-      res.json(data[1][0])
+    } else {
+      res.json(data[1][0]);
     }
   }).catch(function(err) {
     res.status(400);

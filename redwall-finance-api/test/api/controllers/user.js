@@ -13,9 +13,9 @@ describe('controllers', function() {
         request(server)
           .post('/user')
           .send({
-            firstName: "Joe",
-            lastName: "Bloggs",
-            email: "joe.bloggs@example.com"
+            firstName: 'Joe',
+            lastName: 'Bloggs',
+            email: 'joe.bloggs@example.com'
           })
           .set('Accept', 'application/json')
           .expect('Content-Type', /json/)

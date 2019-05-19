@@ -2,10 +2,12 @@
 var util = require('util');
 var models = require('../../models');
 
-var sequelize = models.sequelize
+var sequelize = models.sequelize;
 var User = models.User;
 
-module.exports = {get};
+module.exports = {
+  get
+};
 
 //GET /users
 function get(req, res) {
@@ -14,7 +16,9 @@ function get(req, res) {
   ).then(
     users => res.json(users)
   ).catch(function(err) {
-    res.json({"message":err.name});
+    res.json({
+      'message': err.name
+    });
     res.status(400);
 
     console.error(err);

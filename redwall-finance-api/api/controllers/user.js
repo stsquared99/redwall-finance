@@ -2,10 +2,12 @@
 var util = require('util');
 var models = require('../../models');
 
-var sequelize = models.sequelize
+var sequelize = models.sequelize;
 var User = models.User;
 
-module.exports = {add};
+module.exports = {
+  add
+};
 
 //POST /user
 function add(req, res) {
@@ -15,9 +17,13 @@ function add(req, res) {
     user => res.json(user.toJSON())
   ).catch(function(err) {
     if (err.name === 'SequelizeUniqueConstraintError') {
-      res.json({"message":"Duplicate email"});
+      res.json({
+        'message': 'Duplicate email'
+      });
     } else {
-      res.json({"message":err.name});
+      res.json({
+        'message': err.name
+      });
       res.status(400);
 
       console.error(err);

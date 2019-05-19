@@ -27,8 +27,8 @@
     "supertest": "^1.0.0"
   },
   "scripts": {
-    "format": "jsfmt --write api models ; jscs -x api models",
+    "format": "jsfmt --write api models test ; jscs -x api models test",
     "start": "node app.js",
-    "test": "swagger project test"
+    "test": "export NODE_ENV=test ; swagger project test"
   }
 }

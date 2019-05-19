@@ -11,10 +11,11 @@ describe('controllers', function() {
       it('should successfully add a user', function(done) {
 
         request(server)
-          .post('/user', {
+          .post('/user')
+          .send({
             firstName: "Joe",
             lastName: "Bloggs",
-            "email": "joe.bloggs@example.com"
+            email: "joe.bloggs@example.com"
           })
           .set('Accept', 'application/json')
           .expect('Content-Type', /json/)

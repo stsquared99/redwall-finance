@@ -9,14 +9,15 @@ var config = {
   appRoot: __dirname // required config
 };
 
-models.sequelize.sync().then(function() {
-  SwaggerConnect.create(config, function(err, swaggerConnect) {
-    if (err) { throw err; }
+SwaggerConnect.create(config, function(err, swaggerConnect) {
+  if (err) { throw err; }
 
-    // install middleware
-    swaggerConnect.register(app);
+  // install middleware
+  swaggerConnect.register(app);
 
-    var port = process.env.PORT || 10010;
+  var port = process.env.PORT || 10010;
+
+  models.sequelize.sync().then(function() {
     app.listen(port);
   });
 });

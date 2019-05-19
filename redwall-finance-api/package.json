@@ -14,6 +14,8 @@
   "homepage": "https://github.com/stsquared99/redwall-finance#readme",
   "dependencies": {
     "connect": "^3.3.5",
+    "jscs": "^3.0.7",
+    "jsfmt": "^0.5.3",
     "pg": "^7.11.0",
     "pg-hstore": "^2.3.2",
     "sequelize": "^5.8.6",
@@ -25,6 +27,7 @@
     "supertest": "^1.0.0"
   },
   "scripts": {
+    "format": "jsfmt --write api models ; jscs -x api models",
     "start": "node app.js",
     "test": "swagger project test"
   }

@@ -140,7 +140,7 @@ paths:
           in: body
           required: true
           schema:
-            $ref: "#/definitions/UserPostProperties"
+            $ref: "#/definitions/UserPatchProperties"
         - name: userId
           description: user ID
           type: integer

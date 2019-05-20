@@ -1,6 +1,7 @@
 'use strict';
 
 var SwaggerConnect = require('swagger-connect');
+var SwaggerUI = require('swagger-tools/middleware/swagger-ui');
 var app = require('connect')();
 var models = require('./models');
 module.exports = app; // for testing
@@ -11,6 +12,9 @@ var config = {
 
 SwaggerConnect.create(config, function(err, swaggerConnect) {
   if (err) { throw err; }
+
+  // install swagger-ui
+  app.use(SwaggerUI(swaggerConnect.runner.swagger));
 
   // install middleware
   swaggerConnect.register(app);

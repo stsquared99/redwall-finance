@@ -202,6 +202,9 @@ definitions:
     properties:
       routingNumber:
         type: integer
+      status:
+        type: string
+        enum: [OPEN, CLOSED, LOCKED]
   AccountPostProperties:
     required:
       - routingNumber
@@ -218,6 +221,7 @@ definitions:
       - routingNumber
       - balance
       - type
+      - status
       - createdAt
       - updatedAt
       - userId
@@ -231,6 +235,9 @@ definitions:
       type:
         type: string
         enum: [CHECKING, SAVINGS]
+      status:
+        type: string
+        enum: [OPEN, CLOSED, LOCKED]
       createdAt:
         type: string
       updatedAt:

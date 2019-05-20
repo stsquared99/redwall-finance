@@ -8,7 +8,6 @@ var Account = models.Account;
 
 module.exports = {
   getAccount,
-  removeAccount,
   updateAccount
 };
 
@@ -35,27 +34,6 @@ function getAccount(req, res, next) {
   });
 }
 
-//DELETE /account/{id} operationId
-function removeAccount(req, res, next) {
-  Account.destroy({
-    where: {
-      accountNumber: req.swagger.params.accountNumber.value
-    }
-  }).then(function(data) {
-    res.status(204);
-
-    res.json();
-  }).catch(function(err) {
-    res.status(400);
-
-    res.json({
-      'message': err.message
-    });
-
-    console.error(err);
-  });
-}
-
 //PATCH /account/{id} operationId
 function updateAccount(req, res, next) {
   Account.findOne({
@@ -66,6 +44,12 @@ function updateAccount(req, res, next) {
     if (account === null) {
       throw new Error('Account not found');
     }
+
+    var accountProperties = req.swagger.params.account.value;
+
+    //Should this be slient? Should it throw an error?
+    accountProperties.balance = null;
+    accountProperties.type = null;
 
     account = jsonmergepatch.apply(account, req.swagger.params.account.value);
 
@@ -84,16 +68,10 @@ function updateAccount(req, res, next) {
   }).catch(function(err) {
     res.status(400);
 
-    if (err.name === 'SequelizeUniqueConstraintError') {
-      res.json({
-        'message': 'Duplicate email'
-      });
-    } else {
-      res.json({
-        'message': err.message
-      });
+    res.json({
+      'message': err.message
+    });
 
-      console.error(err);
-    }
+    console.error(err);
   });
 }

@@ -200,12 +200,8 @@ paths:
 definitions:
   AccountPatchProperties:
     properties:
-      firstName:
-        type: string
-      lastName:
-        type: string
-      email:
-        type: string
+      routingNumber:
+        type: integer
   AccountPostProperties:
     required:
       - routingNumber
@@ -244,7 +240,7 @@ definitions:
   GetAccountsListResponse:
     type: array
     items:
-      $ref: "#/definitions/UserResponse"
+      $ref: "#/definitions/AccountResponse"
   GetUsersListResponse:
     type: array
     items:

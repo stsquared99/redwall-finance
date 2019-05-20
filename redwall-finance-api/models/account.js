@@ -15,7 +15,10 @@ module.exports = (sequelize, DataTypes) => {
     active: DataTypes.BOOLEAN
   }, {});
   Account.associate = function(models) {
-    // associations can be defined here
+    Account.belongsTo(models.User, {
+      foreignKey: 'userId',
+      onDelete: 'SET NULL'
+    });
   };
   return Account;
 };

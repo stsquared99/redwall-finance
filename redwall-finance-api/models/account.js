@@ -11,8 +11,7 @@ module.exports = (sequelize, DataTypes) => {
     balance: DataTypes.DOUBLE,
     type: DataTypes.ENUM({
       values: ['CHECKING', 'SAVINGS']
-    }),
-    active: DataTypes.BOOLEAN
+    })
   }, {});
   Account.associate = function(models) {
     Account.belongsTo(models.User, {

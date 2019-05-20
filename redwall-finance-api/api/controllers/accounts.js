@@ -9,7 +9,7 @@ module.exports = {
 };
 
 //GET /accounts
-function get(req, res) {
+function getAccounts(req, res) {
   sequelize.sync().then(
     () => Account.findAll()
   ).then(

@@ -8,30 +8,10 @@ var User = models.User;
 
 module.exports = {
   addUser,
+  getUser,
   removeUser,
   updateUser
 };
-
-//DELETE /user/{id} operationId
-function removeUser(req, res, next) {
-  User.destroy({
-    where: {
-      userId: req.swagger.params.userId.value
-    }
-  }).then(function(data) {
-    res.status(204);
-
-    res.json();
-  }).catch(function(err) {
-    res.status(400);
-
-    res.json({
-      'message': err.message
-    });
-
-    console.error(err);
-  });
-}
 
 //POST /user
 function addUser(req, res) {
@@ -51,6 +31,50 @@ function addUser(req, res) {
 
       console.error(err);
     }
+  });
+}
+
+//GET /user/{id} operationId
+function getUser(req, res, next) {
+  User.findOne({
+    where: {
+      userId: req.swagger.params.userId.value
+    }
+  }).then(user => {
+    if (user === null) {
+      throw new Error('User not found');
+    }
+
+    res.json(user.toJSON());
+  }).catch(function(err) {
+    res.status(400);
+
+    res.json({
+      'message': err.message
+    });
+
+    console.error(err);
+  });
+}
+
+//DELETE /user/{id} operationId
+function removeUser(req, res, next) {
+  User.destroy({
+    where: {
+      userId: req.swagger.params.userId.value
+    }
+  }).then(function(data) {
+    res.status(204);
+
+    res.json();
+  }).catch(function(err) {
+    res.status(400);
+
+    res.json({
+      'message': err.message
+    });
+
+    console.error(err);
   });
 }
 

@@ -54,8 +54,17 @@ var supertest = require('supertest');
 var api = supertest('http://localhost:3000'); // supertest init;
 var expect = chai.expect;
 
+var models = require('../../../models');
+
+var sequelize = models.sequelize;
+var User = models.User;
+
 describe('/user', function() {
   describe('post', function() {
+    beforeEach(done =>
+      sequelize.query('TRUNCATE TABLE "Users"').asCallback(done)
+    );
+
     it('should respond with 200 Success', function(done) {
       /*eslint-disable*/
       var schema = {
@@ -93,7 +102,7 @@ describe('/user', function() {
       api.post('/user')
       .set('Content-Type', 'application/json')
       .send({
-        user: 'DATA GOES HERE'
+        firstName:'Joe',lastName:'Bloggs',email:'joe.bloggs@example.com'
       })
       .expect(200)
       .end(function(err, res) {
@@ -101,10 +110,10 @@ describe('/user', function() {
 
         expect(validator.validate(res.body, schema)).to.be.true;
         done();
-      });
+      })
     });
 
-    it('should respond with default Error', function(done) {
+    it('with duplicate email should respond with 400 Error', function(done) {
       /*eslint-disable*/
       var schema = {
         "required": [
@@ -117,18 +126,26 @@ describe('/user', function() {
         }
       };
 
-      /*eslint-enable*/
-      api.post('/user')
-      .set('Content-Type', 'application/json')
-      .send({
-        user: 'DATA GOES HERE'
-      })
-      .expect('DEFAULT RESPONSE CODE HERE')
-      .end(function(err, res) {
-        if (err) return done(err);
-
-        expect(validator.validate(res.body, schema)).to.be.true;
+      sequelize.sync().then(
+        () => User.create({
+          firstName:'Joe',lastName:'Bloggs',email:'joe.bloggs@example.com'
+        })
+      ).then(() => {
         done();
+        api.post('/user')
+        .set('Content-Type', 'application/json')
+        .send({
+          firstName:'Joe',lastName:'Bloggs',email:'joe.bloggs@example.com'
+        })
+        .expect(400)
+        .end(function(err, res) {
+          if (err) return done(err);
+
+          expect(validator.validate(res.body, schema)).to.be.true;
+          done();
+        });
+      }).catch(function(err) {
+        done(err);
       });
     });
 

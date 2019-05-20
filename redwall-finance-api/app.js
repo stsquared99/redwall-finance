@@ -19,5 +19,7 @@ SwaggerConnect.create(config, function(err, swaggerConnect) {
 
   models.sequelize.sync().then(function() {
     app.listen(port);
+
+    console.log('listening on http://127.0.0.1:' + port);
   });
 });

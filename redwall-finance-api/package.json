@@ -35,6 +35,7 @@
   "scripts": {
     "format": "jsfmt --write api models test ; jscs -x api models test",
     "start": "node app.js",
-    "test": "dropdbjs redwall_finance_test --password=postgres ; createdbjs redwall_finance_test --password=postgres && export NODE_ENV=test ; swagger project test"
+    "test": "export NODE_ENV=test ; swagger project test",
+    "test-start": "dropdbjs redwall_finance_test --password=postgres ; createdbjs redwall_finance_test --password=postgres && export NODE_ENV=test ; node app.js"
   }
 }

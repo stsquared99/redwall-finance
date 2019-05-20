@@ -38,23 +38,26 @@ function addUser(req, res) {
 
 //POST /user/{userId}/account
 function addUserAccount(req, res) {
-  User.findOne({
-    where: {
-      userId: req.swagger.params.userId.value
-    }
-  }).then(user => {
-    if (user === null) {
-      throw new Error('User not found');
-    }
+  sequelize.transaction(t => {
+    return User.findOne({
+      where: {
+        userId: req.swagger.params.userId.value
+      }
+    }).then(user => {
+      if (user === null) {
+        throw new Error('User not found');
+      }
 
-    var accountProperties = req.swagger.params.account.value;
+      var accountProperties = req.swagger.params.account.value;
 
-    accountProperties.balance = 0;
+      accountProperties.balance = 0;
 
-    return Account.create(accountProperties).then(
-      account => {
-        return account.setUser(user);
-      });
+      return Account.create(accountProperties).then(
+        account => {
+          return account.setUser(user);
+        }
+      );
+    });
   }).then(
     account => {
       res.json(account.toJSON());

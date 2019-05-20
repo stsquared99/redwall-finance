@@ -48,7 +48,7 @@ function updateAccount(req, res, next) {
     var accountProperties = req.swagger.params.account.value;
 
     //Should this be slient? Should it throw an error?
-    accountProperties.balance = null;
+    accountProperties.balanceInCents = null;
     accountProperties.type = null;
 
     account = jsonmergepatch.apply(account, req.swagger.params.account.value);

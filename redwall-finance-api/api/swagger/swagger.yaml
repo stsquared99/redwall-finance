@@ -219,7 +219,7 @@ definitions:
     required:
       - accountNumber
       - routingNumber
-      - balance
+      - balanceInCents
       - type
       - status
       - createdAt
@@ -230,7 +230,7 @@ definitions:
         type: integer
       routingNumber:
         type: integer
-      balance:
+      balanceInCents:
         type: integer
       type:
         type: string

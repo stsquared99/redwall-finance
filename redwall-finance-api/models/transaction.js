@@ -7,9 +7,10 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       type: DataTypes.INTEGER
     },
+    amountInCents: DataTypes.INTEGER,
     description: DataTypes.STRING,
     fromAccountType: DataTypes.ENUM({
-      values: ['ATM', 'EXTERNAL', 'INTERNAL']
+      values: ['ATM', 'DEBIT', 'EXTERNAL', 'INTERNAL']
     }),
     fromAccountNumber: DataTypes.INTEGER,
     fromRoutingNumber: DataTypes.INTEGER,

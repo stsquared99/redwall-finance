@@ -50,7 +50,7 @@ function addUserAccount(req, res) {
 
       var accountProperties = req.swagger.params.account.value;
 
-      accountProperties.balance = 0;
+      accountProperties.balanceInCents = 0;
       accountProperties.status = 'OPEN';
 
       return Account.create(accountProperties).then(

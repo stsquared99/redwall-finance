@@ -10,7 +10,10 @@ module.exports = (sequelize, DataTypes) => {
     routingNumber: DataTypes.INTEGER,
     balance: DataTypes.INTEGER,
     type: DataTypes.ENUM({
-      values: ['CHECKING', 'SAVINGS']
+      values: ['CHECKING', 'MORTGAGE', 'SAVINGS']
+    }),
+    status: DataTypes.ENUM({
+      values: ['OPEN', 'CLOSED', 'LOCKED']
     })
   }, {});
   Account.associate = function(models) {

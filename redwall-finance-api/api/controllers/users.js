@@ -5,11 +5,11 @@ var sequelize = models.sequelize;
 var User = models.User;
 
 module.exports = {
-  get
+  getUsers
 };
 
 //GET /users
-function get(req, res) {
+function getUsers(req, res) {
   User.findAll().then(
     users => res.json(users)
   ).catch(function(err) {

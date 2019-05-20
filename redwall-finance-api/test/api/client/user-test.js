@@ -129,13 +129,11 @@ describe('/user', function() {
         }
       };
 
-      sequelize.sync().then(
-        () => User.create({
-          firstName: 'Joe',
-          lastName: 'Bloggs',
-          email: 'joe.bloggs@example.com'
-        })
-      ).then(() => {
+      User.create({
+        firstName: 'Joe',
+        lastName: 'Bloggs',
+        email: 'joe.bloggs@example.com'
+      }).then(() => {
         done();
         api.post('/user')
           .set('Content-Type', 'application/json')

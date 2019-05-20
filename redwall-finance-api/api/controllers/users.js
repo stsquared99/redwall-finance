@@ -10,9 +10,7 @@ module.exports = {
 
 //GET /users
 function get(req, res) {
-  sequelize.sync().then(
-    () => User.findAll()
-  ).then(
+  User.findAll().then(
     users => res.json(users)
   ).catch(function(err) {
     res.status(400);

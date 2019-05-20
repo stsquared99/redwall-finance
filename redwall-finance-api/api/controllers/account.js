@@ -6,7 +6,6 @@ var Account = models.Account;
 
 module.exports = {
   add,
-  remove,
   update
 };
 

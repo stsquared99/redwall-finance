@@ -16,6 +16,7 @@
     "connect": "^3.3.5",
     "jscs": "^3.0.7",
     "jsfmt": "^0.5.3",
+    "json-merge-patch": "^0.2.3",
     "pg": "^7.11.0",
     "pg-hstore": "^2.3.2",
     "pgtools": "^0.3.0",
@@ -24,13 +25,13 @@
     "swagger-connect": "^0.1.0"
   },
   "devDependencies": {
+    "chai": "^3.0.0",
+    "dotenv": "^1.2.0",
+    "mocha": "^2.2.5",
+    "request": "^2.58.0",
     "should": "^7.1.0",
     "supertest": "^1.0.0",
-    "z-schema": "^3.12.0",
-    "request": "^2.58.0",
-    "chai": "^3.0.0",
-    "mocha": "^2.2.5",
-    "dotenv": "^1.2.0"
+    "z-schema": "^3.12.0"
   },
   "scripts": {
     "format": "jsfmt --write api models test ; jscs -x api models test",

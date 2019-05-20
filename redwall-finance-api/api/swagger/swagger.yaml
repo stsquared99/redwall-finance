@@ -19,7 +19,7 @@ paths:
   /account:
     x-swagger-router-controller: account
     post:
-      operationId: add
+      operationId: addAccount
       description: add a new account
       parameters:
         - name: account
@@ -27,7 +27,7 @@ paths:
           in: body
           required: true
           schema:
-            $ref: "#/definitions/AccountProperties"
+            $ref: "#/definitions/AccountPostProperties"
       responses:
         "200":
           description: Success
@@ -39,8 +39,26 @@ paths:
             $ref: "#/definitions/ErrorResponse"
   /account/{accountNumber}:
     x-swagger-router-controller: account
+    get:
+      operationId: getAccount
+      description: get an account
+      parameters:
+        - name: accountNumber
+          description: account number
+          type: integer
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/AccountResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
     patch:
-      operationId: update
+      operationId: updateAccount
       description: update an account
       parameters:
         - name: account
@@ -48,7 +66,7 @@ paths:
           in: body
           required: true
           schema:
-            $ref: "#/definitions/AccountProperties"
+            $ref: "#/definitions/AccountPatchProperties"
         - name: accountNumber
           description: account number
           type: integer
@@ -66,7 +84,7 @@ paths:
   /accounts:
     x-swagger-router-controller: accounts
     get:
-      operationId: get
+      operationId: getAccounts
       description: get the accounts list
       responses:
         "200":
@@ -80,7 +98,7 @@ paths:
   /user:
     x-swagger-router-controller: user
     post:
-      operationId: add
+      operationId: addUser
       description: add a new user
       parameters:
         - name: user
@@ -101,7 +119,7 @@ paths:
   /user/{userId}:
     x-swagger-router-controller: user
     delete:
-      operationId: remove
+      operationId: removeUser
       description: remove a user
       parameters:
         - name: userId
@@ -116,8 +134,26 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+    get:
+      operationId: getUser
+      description: get a user
+      parameters:
+        - name: userId
+          description: user ID
+          type: integer
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/UserResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
     patch:
-      operationId: update
+      operationId: updateUser
       description: update a user
       parameters:
         - name: user
@@ -143,7 +179,7 @@ paths:
   /users:
     x-swagger-router-controller: users
     get:
-      operationId: get
+      operationId: getUsers
       description: get the users list
       responses:
         "200":

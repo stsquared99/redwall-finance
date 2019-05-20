@@ -1,20 +1,41 @@
 'use strict';
+var jsonmergepatch = require('json-merge-patch');
+
 var models = require('../../models');
 
 var sequelize = models.sequelize;
 var User = models.User;
 
 module.exports = {
-  add,
-  remove,
-  update
+  addUser,
+  removeUser,
+  updateUser
 };
 
+//DELETE /user/{id} operationId
+function removeUser(req, res, next) {
+  User.destroy({
+    where: {
+      userId: req.swagger.params.userId.value
+    }
+  }).then(function(data) {
+    res.status(204);
+
+    res.json();
+  }).catch(function(err) {
+    res.status(400);
+
+    res.json({
+      'message': err.message
+    });
+
+    console.error(err);
+  });
+}
+
 //POST /user
-function add(req, res) {
-  sequelize.sync().then(
-    () => User.create(req.swagger.params.user.value)
-  ).then(
+function addUser(req, res) {
+  User.create(req.swagger.params.user.value).then(
     user => res.json(user.toJSON())
   ).catch(function(err) {
     res.status(400);
@@ -25,7 +46,7 @@ function add(req, res) {
       });
     } else {
       res.json({
-        'message': err.name
+        'message': err.message
       });
 
       console.error(err);
@@ -33,47 +54,28 @@ function add(req, res) {
   });
 }
 
-//DELETE /user/{id} operationId
-function remove(req, res, next) {
-  sequelize.sync().then(
-    () => User.destroy({
+//PATCH /user/{id} operationId
+function updateUser(req, res, next) {
+  User.findOne({
+    where: {
+      userId: req.swagger.params.userId.value
+    }
+  }).then(user => {
+    if (user === null) {
+      throw new Error('User not found');
+    }
+
+    user = jsonmergepatch.apply(user, req.swagger.params.user.value);
+
+    return User.update(user.toJSON(), {
+      returning: true,
       where: {
         userId: req.swagger.params.userId.value
       }
-    })
-  ).then(function(data) {
-    res.status(204);
-
-    res.json();
-  }).catch(function(err) {
-    res.status(400);
-
-    res.json({
-      'message': err.name
     });
-
-    console.error(err);
-  });
-}
-
-//PUT /user/{id} operationId
-function update(req, res, next) {
-  sequelize.sync().then(
-    () => User.update(
-      req.swagger.params.user.value, {
-        returning: true,
-        where: {
-          userId: req.swagger.params.userId.value
-        }
-      }
-    )
-  ).then(function(data) {
+  }).then(function(data) {
     if (data[0] === 0) {
-      res.status(400);
-
-      res.json({
-        'message': 'User not found'
-      });
+      throw new Error('User not found');
     } else {
       res.json(data[1][0]);
     }
@@ -86,7 +88,7 @@ function update(req, res, next) {
       });
     } else {
       res.json({
-        'message': err.name
+        'message': err.message
       });
 
       console.error(err);

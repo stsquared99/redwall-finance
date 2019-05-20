@@ -5,7 +5,7 @@ var sequelize = models.sequelize;
 var Account = models.Account;
 
 module.exports = {
-  get
+  getAccounts
 };
 
 //GET /accounts

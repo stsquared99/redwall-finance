@@ -61,89 +61,98 @@ var User = models.User;
 
 describe('/user', function() {
   describe('post', function() {
-    beforeEach(done =>
-      sequelize.query('TRUNCATE TABLE "Users"').asCallback(done)
-    );
+    beforeEach(
+      done => sequelize.query('TRUNCATE TABLE "Users"').asCallback(done));
 
     it('should respond with 200 Success', function(done) {
       /*eslint-disable*/
       var schema = {
-        "required": [
-          "userId",
-          "firstName",
-          "lastName",
-          "email",
-          "createdAt",
-          "updatedAt"
+        'required': [
+          'userId',
+          'firstName',
+          'lastName',
+          'email',
+          'createdAt',
+          'updatedAt'
         ],
-        "properties": {
-          "userId": {
-            "type": "integer"
+        'properties': {
+          'userId': {
+            'type': 'integer'
           },
-          "firstName": {
-            "type": "string"
+          'firstName': {
+            'type': 'string'
           },
-          "lastName": {
-            "type": "string"
+          'lastName': {
+            'type': 'string'
           },
-          "email": {
-            "type": "string"
+          'email': {
+            'type': 'string'
           },
-          "createdAt": {
-            "type": "string"
+          'createdAt': {
+            'type': 'string'
           },
-          "updatedAt": {
-            "type": "string"
+          'updatedAt': {
+            'type': 'string'
           }
         }
       };
 
       /*eslint-enable*/
       api.post('/user')
-      .set('Content-Type', 'application/json')
-      .send({
-        firstName:'Joe',lastName:'Bloggs',email:'joe.bloggs@example.com'
-      })
-      .expect(200)
-      .end(function(err, res) {
-        if (err) return done(err);
+        .set('Content-Type', 'application/json')
+        .send({
+          firstName: 'Joe',
+          lastName: 'Bloggs',
+          email: 'joe.bloggs@example.com'
+        })
+        .expect(200)
+        .end(function(err, res) {
+          if (err) {
+            return done(err);
+          }
 
-        expect(validator.validate(res.body, schema)).to.be.true;
-        done();
-      })
+          expect(validator.validate(res.body, schema)).to.be.true;
+          done();
+        });
     });
 
     it('with duplicate email should respond with 400 Error', function(done) {
       /*eslint-disable*/
       var schema = {
-        "required": [
-          "message"
+        'required': [
+          'message'
         ],
-        "properties": {
-          "message": {
-            "type": "string"
+        'properties': {
+          'message': {
+            'type': 'string'
           }
         }
       };
 
       sequelize.sync().then(
         () => User.create({
-          firstName:'Joe',lastName:'Bloggs',email:'joe.bloggs@example.com'
+          firstName: 'Joe',
+          lastName: 'Bloggs',
+          email: 'joe.bloggs@example.com'
         })
       ).then(() => {
         done();
         api.post('/user')
-        .set('Content-Type', 'application/json')
-        .send({
-          firstName:'Joe',lastName:'Bloggs',email:'joe.bloggs@example.com'
-        })
-        .expect(400)
-        .end(function(err, res) {
-          if (err) return done(err);
+          .set('Content-Type', 'application/json')
+          .send({
+            firstName: 'Joe',
+            lastName: 'Bloggs',
+            email: 'joe.bloggs@example.com'
+          })
+          .expect(400)
+          .end(function(err, res) {
+            if (err) {
+              return done(err);
+            }
 
-          expect(validator.validate(res.body, schema)).to.be.true;
-          done();
-        });
+            expect(validator.validate(res.body, schema)).to.be.true;
+            done();
+          });
       }).catch(function(err) {
         done(err);
       });

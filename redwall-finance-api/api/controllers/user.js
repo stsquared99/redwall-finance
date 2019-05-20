@@ -4,10 +4,12 @@ var jsonmergepatch = require('json-merge-patch');
 var models = require('../../models');
 
 var sequelize = models.sequelize;
+var Account = models.Account;
 var User = models.User;
 
 module.exports = {
   addUser,
+  addUserAccount,
   getUser,
   removeUser,
   updateUser
@@ -31,6 +33,40 @@ function addUser(req, res) {
 
       console.error(err);
     }
+  });
+}
+
+//POST /user/{userId}/account
+function addUserAccount(req, res) {
+  User.findOne({
+    where: {
+      userId: req.swagger.params.userId.value
+    }
+  }).then(user => {
+    if (user === null) {
+      throw new Error('User not found');
+    }
+
+    var accountProperties = req.swagger.params.account.value;
+
+    accountProperties.balance = 0;
+
+    return Account.create(accountProperties).then(
+      account => {
+        return account.setUser(user);
+      });
+  }).then(
+    account => {
+      res.json(account.toJSON());
+    }
+  ).catch(function(err) {
+    res.status(400);
+
+    res.json({
+      'message': err.message
+    });
+
+    console.error(err);
   });
 }
 

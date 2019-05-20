@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER
     },
     routingNumber: DataTypes.INTEGER,
-    balance: DataTypes.DOUBLE,
+    balance: DataTypes.INTEGER,
     type: DataTypes.ENUM({
       values: ['CHECKING', 'SAVINGS']
     })

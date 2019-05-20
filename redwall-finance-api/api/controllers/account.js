@@ -7,10 +7,33 @@ var sequelize = models.sequelize;
 var Account = models.Account;
 
 module.exports = {
-  addAccount,
+  getAccount,
   removeAccount,
   updateAccount
 };
+
+//GET /account/{id} operationId
+function getAccount(req, res, next) {
+  Account.findOne({
+    where: {
+      accountNumber: req.swagger.params.accountNumber.value
+    }
+  }).then(account => {
+    if (account === null) {
+      throw new Error('Account not found');
+    }
+
+    res.json(account.toJSON());
+  }).catch(function(err) {
+    res.status(400);
+
+    res.json({
+      'message': err.message
+    });
+
+    console.error(err);
+  });
+}
 
 //DELETE /account/{id} operationId
 function removeAccount(req, res, next) {
@@ -30,27 +53,6 @@ function removeAccount(req, res, next) {
     });
 
     console.error(err);
-  });
-}
-
-//POST /account
-function addAccount(req, res) {
-  Account.create(req.swagger.params.account.value).then(
-    account => res.json(account.toJSON())
-  ).catch(function(err) {
-    res.status(400);
-
-    if (err.name === 'SequelizeUniqueConstraintError') {
-      res.json({
-        'message': 'Duplicate email'
-      });
-    } else {
-      res.json({
-        'message': err.message
-      });
-
-      console.error(err);
-    }
   });
 }
 

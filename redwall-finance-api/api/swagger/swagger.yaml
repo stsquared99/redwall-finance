@@ -16,27 +16,6 @@ consumes:
 produces:
   - application/json
 paths:
-  /account:
-    x-swagger-router-controller: account
-    post:
-      operationId: addAccount
-      description: add a new account
-      parameters:
-        - name: account
-          description: Account properties
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/AccountPostProperties"
-      responses:
-        "200":
-          description: Success
-          schema:
-            $ref: "#/definitions/AccountResponse"
-        default:
-          description: Error
-          schema:
-            $ref: "#/definitions/ErrorResponse"
   /account/{accountNumber}:
     x-swagger-router-controller: account
     get:
@@ -176,6 +155,32 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /user/{userId}/account:
+    x-swagger-router-controller: user
+    post:
+      operationId: addUserAccount
+      description: add a new account for this user
+      parameters:
+        - name: account
+          description: Account properties
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/AccountPostProperties"
+        - name: userId
+          description: user ID
+          type: integer
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/AccountResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /users:
     x-swagger-router-controller: users
     get:
@@ -203,37 +208,39 @@ definitions:
         type: string
   AccountPostProperties:
     required:
-      - firstName
-      - lastName
-      - email
+      - routingNumber
+      - type
     properties:
-      firstName:
+      routingNumber:
+        type: integer
+      type:
         type: string
-      lastName:
-        type: string
-      email:
-        type: string
+        enum: [CHECKING, SAVINGS]
   AccountResponse:
     required:
-      - userId
-      - firstName
-      - lastName
-      - email
+      - accountNumber
+      - routingNumber
+      - balance
+      - type
       - createdAt
       - updatedAt
+      - userId
     properties:
-      userId:
+      accountNumber:
         type: integer
-      firstName:
+      routingNumber:
+        type: integer
+      balance:
+        type: integer
+      type:
         type: string
-      lastName:
-        type: string
-      email:
-        type: string
+        enum: [CHECKING, SAVINGS]
       createdAt:
         type: string
       updatedAt:
         type: string
+      userId:
+        type: integer
   GetAccountsListResponse:
     type: array
     items:

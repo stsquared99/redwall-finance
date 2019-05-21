@@ -378,10 +378,12 @@ function getAccountTransactions(req, res) {
     return Transaction.findAll({
       where: {
         [Op.or]: [{
-            fromAccountNumber: req.swagger.params.accountNumber.value
+            fromAccountNumber: req.swagger.params.accountNumber.value,
+            fromAccountType: 'INTERNAL'
           },
           {
-            toAccountNumber: req.swagger.params.accountNumber.value
+            toAccountNumber: req.swagger.params.accountNumber.value,
+            toAccountType: 'INTERNAL'
           }
         ]
       }

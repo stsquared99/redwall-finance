@@ -1,0 +1,16 @@
+{
+  "name": "redwall-finance-graphql",
+  "version": "1.0.0",
+  "description": "GraphQL Layer",
+  "main": "index.js",
+  "scripts": {
+    "import": "yaml2json ../redwall-finance-api/api/swagger/swagger.yaml -p -i4 > swagger.json",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Samuel Trong Tran <sln.t.tran@gmail.com>",
+  "repository": "git+https://github.com/stsquared99/redwall-finance.git",
+  "license": "ISC",
+  "dependencies": {
+    "yamljs": "^0.3.0"
+  }
+}

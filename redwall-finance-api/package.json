@@ -14,6 +14,7 @@
   "homepage": "https://github.com/stsquared99/redwall-finance#readme",
   "dependencies": {
     "connect": "^3.3.5",
+    "js-beautify": "^1.10.0",
     "jscs": "^3.0.7",
     "jsfmt": "^0.5.3",
     "json-merge-patch": "^0.2.3",
@@ -36,7 +37,7 @@
     "z-schema": "^3.12.0"
   },
   "scripts": {
-    "format": "jsfmt --write api models test ; jscs -x api models test",
+    "format": "jsfmt --write api models test && js-beautify -s 2 api/**/*.js models/*.js test/**/**/*.js ; jscs -x api models test",
     "start": "node app.js",
     "test": "export NODE_ENV=test ; swagger project test",
     "test-start": "dropdbjs redwall_finance_test --password=postgres ; createdbjs redwall_finance_test --password=postgres && export NODE_ENV=test ; node app.js"

@@ -2,7 +2,7 @@
   "name": "redwall-finance-api",
   "version": "0.0.1",
   "private": true,
-  "description": "New Swagger API Project",
+  "description": "REST API and Documentation",
   "keywords": [],
   "author": "Samuel Trong Tran <sln.t.tran@gmail.com>",
   "main": "app.js",

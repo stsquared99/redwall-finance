@@ -45,13 +45,13 @@ function updateAccount(req, res, next) {
       throw new Error('Account not found');
     }
 
-    var accountProperties = req.swagger.params.account.value;
+    var accountProperties = req.swagger.params.accountProperties.value;
 
     //Should this be slient? Should it throw an error?
     accountProperties.balanceInCents = null;
     accountProperties.type = null;
 
-    account = jsonmergepatch.apply(account, req.swagger.params.account.value);
+    account = jsonmergepatch.apply(account, req.swagger.params.accountProperties.value);
 
     return Account.update(account.toJSON(), {
       returning: true,

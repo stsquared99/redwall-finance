@@ -17,7 +17,7 @@ module.exports = {
 
 //POST /user
 function addUser(req, res) {
-  User.create(req.swagger.params.user.value).then(
+  User.create(req.swagger.params.userProperties.value).then(
     user => res.json(user.toJSON())
   ).catch(function(err) {
     res.status(400);
@@ -48,7 +48,7 @@ function addUserAccount(req, res) {
         throw new Error('User not found');
       }
 
-      var accountProperties = req.swagger.params.account.value;
+      var accountProperties = req.swagger.params.accountProperties.value;
 
       accountProperties.balanceInCents = 0;
       accountProperties.status = 'OPEN';
@@ -129,7 +129,7 @@ function updateUser(req, res, next) {
       throw new Error('User not found');
     }
 
-    user = jsonmergepatch.apply(user, req.swagger.params.user.value);
+    user = jsonmergepatch.apply(user, req.swagger.params.userProperties.value);
 
     return User.update(user.toJSON(), {
       returning: true,

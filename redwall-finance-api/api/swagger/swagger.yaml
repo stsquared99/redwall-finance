@@ -40,7 +40,7 @@ paths:
       operationId: updateAccount
       description: update an account
       parameters:
-        - name: account
+        - name: accountProperties
           description: Account properties
           in: body
           required: true
@@ -80,7 +80,7 @@ paths:
       operationId: addUser
       description: add a new user
       parameters:
-        - name: user
+        - name: userProperties
           description: User properties
           in: body
           required: true
@@ -135,7 +135,7 @@ paths:
       operationId: updateUser
       description: update a user
       parameters:
-        - name: user
+        - name: userProperties
           description: User properties
           in: body
           required: true
@@ -161,7 +161,7 @@ paths:
       operationId: addUserAccount
       description: add a new account for this user
       parameters:
-        - name: account
+        - name: accountProperties
           description: Account properties
           in: body
           required: true

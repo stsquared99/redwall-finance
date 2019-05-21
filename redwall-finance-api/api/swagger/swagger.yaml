@@ -81,7 +81,7 @@ paths:
         "200":
           description: Success
           schema:
-            $ref: "#/definitions/TranscationResponse"
+            $ref: "#/definitions/TransactionResponse"
         default:
           description: Error
           schema:
@@ -107,7 +107,55 @@ paths:
         "200":
           description: Success
           schema:
-            $ref: "#/definitions/TranscationResponse"
+            $ref: "#/definitions/TransactionResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /accounts:
+    x-swagger-router-controller: accounts
+    get:
+      operationId: getAccounts
+      description: get the accounts list
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/GetAccountsListResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /transaction/{transactionId}:
+    x-swagger-router-controller: transaction
+    get:
+      operationId: getTransaction
+      description: get an transaction
+      parameters:
+        - name: transactionId
+          description: transaction number
+          type: integer
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/TransactionResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /transactions:
+    x-swagger-router-controller: transactions
+    get:
+      operationId: getTransactions
+      description: get the transaction list
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/GetTransactionsListResponse"
         default:
           description: Error
           schema:
@@ -326,11 +374,15 @@ definitions:
     type: array
     items:
       $ref: "#/definitions/AccountResponse"
+  GetTransactionsListResponse:
+    type: array
+    items:
+      $ref: "#/definitions/TransactionResponse"
   GetUsersListResponse:
     type: array
     items:
       $ref: "#/definitions/UserResponse"
-  TranscationResponse:
+  TransactionResponse:
     required:
       - transactionId
       - amountInCents

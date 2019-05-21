@@ -181,6 +181,26 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /user/{userId}/accounts:
+    x-swagger-router-controller: user
+    get:
+      operationId: getUserAccounts
+      description: get the accounts belonging to a user
+      parameters:
+        - name: userId
+          description: user ID
+          type: integer
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/GetAccountsListResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /users:
     x-swagger-router-controller: users
     get:

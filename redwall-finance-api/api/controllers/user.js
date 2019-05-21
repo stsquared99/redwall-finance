@@ -11,6 +11,7 @@ module.exports = {
   addUser,
   addUserAccount,
   getUser,
+  getUserAccounts,
   removeUser,
   updateUser
 };
@@ -91,6 +92,25 @@ function getUser(req, res, next) {
 
     res.json({
       'message': err.message
+    });
+
+    console.error(err);
+  });
+}
+
+//GET /user/{userId}/accounts:
+function getUserAccounts(req, res) {
+  Account.findAll({
+    where: {
+      userId: req.swagger.params.userId.value
+    }
+  }).then(
+    accounts => res.json(accounts)
+  ).catch(function(err) {
+    res.status(400);
+
+    res.json({
+      'message': err.name
     });
 
     console.error(err);

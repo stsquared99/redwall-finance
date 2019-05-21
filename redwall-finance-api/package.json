@@ -40,6 +40,7 @@
     "format": "jsfmt --write api models test && js-beautify -s 2 api/**/*.js models/*.js test/**/**/*.js ; jscs -x api models test",
     "start": "node app.js",
     "test": "export NODE_ENV=test ; swagger project test",
-    "test-start": "dropdbjs redwall_finance_test --password=postgres ; createdbjs redwall_finance_test --password=postgres && export NODE_ENV=test ; node app.js"
+    "test-start": "dropdbjs redwall_finance_test --password=postgres ; createdbjs redwall_finance_test --password=postgres && export NODE_ENV=test ; node app.js",
+    "validate": "swagger validate api/swagger/swagger.yaml"
   }
 }

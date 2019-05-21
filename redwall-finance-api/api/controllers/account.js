@@ -32,8 +32,10 @@ function doATMTransaction(req, res) {
     }
 
     var accountJson = account.toJSON();
-    var amountInCents = req.swagger.params.transactionProperties.value.amountInCents;
-    var type = req.swagger.params.transactionProperties.value.type;
+    var transactionProperties = req.swagger.params.transactionProperties;
+
+    var amountInCents = transactionProperties.value.amountInCents;
+    var type = transactionProperties.value.type;
 
     var createTransactionProperties;
 
@@ -73,7 +75,9 @@ function doATMTransaction(req, res) {
         transaction: t
       }).then(() => {
         return Transaction.create(
-          createTransactionProperties, {transaction: t}
+          createTransactionProperties, {
+            transaction: t
+          }
         );
       });
     });
@@ -104,10 +108,10 @@ function doDebitTransaction(req, res) {
     }
 
     var accountJson = account.toJSON();
-    var amountInCents = req.swagger.params.transactionProperties.value.amountInCents;
-    var type = req.swagger.params.transactionProperties.value.type;
+    var transactionProperties = req.swagger.params.transactionProperties;
 
-    var createTransactionProperties;
+    var amountInCents = transactionProperties.value.amountInCents;
+    var type = transactionProperties.value.type;
 
     if (type === 'CHARGE') {
       accountJson.balanceInCents -= amountInCents;
@@ -145,8 +149,9 @@ function doDebitTransaction(req, res) {
         transaction: t
       }).then(() => {
         return Transaction.create(
-          createTransactionProperties,
-          {transaction: t}
+          createTransactionProperties, {
+            transaction: t
+          }
         );
       });
     });
@@ -227,8 +232,9 @@ function doExternalTransfer(req, res) {
         transaction: t
       }).then(() => {
         return Transaction.create(
-          createTransactionProperties,
-          {transaction: t}
+          createTransactionProperties, {
+            transaction: t
+          }
         );
       });
     });
@@ -315,8 +321,9 @@ function doInternalTransfer(req, res) {
       });
     }).then(() => {
       return Transaction.create(
-        transactionProperties,
-        {transaction: t}
+        transactionProperties, {
+          transaction: t
+        }
       );
     });
   }).then(

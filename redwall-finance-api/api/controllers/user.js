@@ -54,9 +54,13 @@ function addUserAccount(req, res) {
     accountProperties.status = 'OPEN';
 
     return sequelize.transaction(t => {
-      return Account.create(accountProperties, {transaction: t}).then(
+      return Account.create(accountProperties, {
+        transaction: t
+      }).then(
         account => {
-          return account.setUser(user, {transaction: t});
+          return account.setUser(user, {
+            transaction: t
+          });
         }
       );
     });

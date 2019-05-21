@@ -112,6 +112,26 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /account/{accountNumber}/transactions:
+    x-swagger-router-controller: account
+    get:
+      operationId: getAccountTransactions
+      description: get the transactions for an account
+      parameters:
+        - name: accountNumber
+          description: account number
+          type: integer
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/GetTransactionsListResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /accounts:
     x-swagger-router-controller: accounts
     get:

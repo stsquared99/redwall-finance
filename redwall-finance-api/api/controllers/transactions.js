@@ -16,7 +16,7 @@ function getTransactions(req, res) {
     res.status(400);
 
     res.json({
-      'message': err.name
+      'message': err.message
     });
 
     console.error(err);

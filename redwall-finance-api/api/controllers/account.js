@@ -1,5 +1,8 @@
 'use strict';
 var jsonmergepatch = require('json-merge-patch');
+var Sequelize = require('sequelize');
+
+var Op = Sequelize.Op;
 
 var models = require('../../models');
 
@@ -11,6 +14,7 @@ module.exports = {
   doATMTransaction,
   doDebitTransaction,
   getAccount,
+  getAccountTransactions,
   updateAccount
 };
 
@@ -148,6 +152,41 @@ function getAccount(req, res, next) {
 
     res.json(account.toJSON());
   }).catch(function(err) {
+    res.status(400);
+
+    res.json({
+      'message': err.message
+    });
+
+    console.error(err);
+  });
+}
+
+//GET /account/{accountNumber}/transactions:
+function getAccountTransactions(req, res) {
+  Account.findOne({
+    where: {
+      accountNumber: req.swagger.params.accountNumber.value
+    }
+  }).then(user => {
+    if (user === null) {
+      throw new Error('Account not found');
+    }
+
+    return Transaction.findAll({
+      where: {
+        [Op.or]: [{
+            fromAccountNumber: req.swagger.params.accountNumber.value
+          },
+          {
+            toAccountNumber: req.swagger.params.accountNumber.value
+          }
+        ]
+      }
+    });
+  }).then(
+    accounts => res.json(accounts)
+  ).catch(function(err) {
     res.status(400);
 
     res.json({

@@ -100,17 +100,27 @@ function getUser(req, res, next) {
 
 //GET /user/{userId}/accounts:
 function getUserAccounts(req, res) {
-  Account.findAll({
+  User.findOne({
     where: {
       userId: req.swagger.params.userId.value
     }
+  }).then(user => {
+    if (user === null) {
+      throw new Error('User not found');
+    }
+
+    return Account.findAll({
+      where: {
+        userId: req.swagger.params.userId.value
+      }
+    });
   }).then(
     accounts => res.json(accounts)
   ).catch(function(err) {
     res.status(400);
 
     res.json({
-      'message': err.name
+      'message': err.message
     });
 
     console.error(err);

@@ -51,7 +51,8 @@ function updateAccount(req, res, next) {
     accountProperties.balanceInCents = null;
     accountProperties.type = null;
 
-    account = jsonmergepatch.apply(account, req.swagger.params.accountProperties.value);
+    account = jsonmergepatch.apply(
+      account, req.swagger.params.accountProperties.value);
 
     return Account.update(account.toJSON(), {
       returning: true,

@@ -60,16 +60,54 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-  /accounts:
-    x-swagger-router-controller: accounts
-    get:
-      operationId: getAccounts
-      description: get the accounts list
+  /account/{accountNumber}/atm:
+    x-swagger-router-controller: account
+    post:
+      operationId: doATMTransaction
+      description: do an atm transaction
+      parameters:
+        - name: accountNumber
+          description: account number
+          type: integer
+          in: path
+          required: true
+        - name: transactionProperties
+          description: Transaction properties
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/ATMTransactionProperties"
       responses:
         "200":
           description: Success
           schema:
-            $ref: "#/definitions/GetAccountsListResponse"
+            $ref: "#/definitions/TranscationResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /account/{accountNumber}/debit:
+    x-swagger-router-controller: account
+    post:
+      operationId: doDebitTransaction
+      description: do a debit transaction
+      parameters:
+        - name: accountNumber
+          description: account number
+          type: integer
+          in: path
+          required: true
+        - name: transactionProperties
+          description: Transaction properties
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/DebitTransactionProperties"
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/TranscationResponse"
         default:
           description: Error
           schema:
@@ -264,6 +302,26 @@ definitions:
         type: string
       userId:
         type: integer
+  ATMTransactionProperties:
+    required:
+      - amountInCents
+      - type
+    properties:
+      amountInCents:
+        type: integer
+      type:
+        type: string
+        enum: [DEPOSIT, WITHDRAWAL]
+  DebitTransactionProperties:
+    required:
+      - amountInCents
+      - type
+    properties:
+      amountInCents:
+        type: integer
+      type:
+        type: string
+        enum: [CHARGE, CREDIT]
   GetAccountsListResponse:
     type: array
     items:
@@ -296,16 +354,16 @@ definitions:
         type: string
         enum: ['ATM', 'DEBIT', 'EXTERNAL', 'INTERNAL']
       fromAccountNumber:
-        type: string
+        type: integer
       fromRoutingNumber:
-        type: string
+        type: integer
       toAccountType:
         type: string
         enum: ['ATM', 'DEBIT', 'EXTERNAL', 'INTERNAL']
       toAccountNumber:
         type: integer
       toRoutingNumber:
-        type: string
+        type: integer
       createdAt:
         type: string
       updatedAt:

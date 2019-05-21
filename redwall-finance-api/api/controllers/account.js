@@ -167,6 +167,84 @@ function doDebitTransaction(req, res) {
 
 //POST /account/{accountNumber}/transfer
 function doExternalTransfer(req, res) {
+  Account.findOne({
+    where: {
+      accountNumber: req.swagger.params.accountNumber.value
+    }
+  }).then(account => {
+    if (account === null) {
+      throw new Error('Account not found');
+    }
+
+    var accountJson = account.toJSON();
+    var transferProperties = req.swagger.params.transferProperties;
+
+    var accountNumber = transferProperties.value.accountNumber;
+    var amountInCents = transferProperties.value.amountInCents;
+    var description = transferProperties.value.description;
+    var routingNumber = transferProperties.value.routingNumber;
+    var type = transferProperties.value.type;
+
+    if (description === undefined || description === null) {
+      description = '';
+    }
+
+    var createTransactionProperties;
+
+    if (type === 'FROM_EXTERNAL') {
+      accountJson.balanceInCents += amountInCents;
+
+      createTransactionProperties = {
+        amountInCents: amountInCents,
+        description: description,
+        fromAccountType: 'EXTERNAL',
+        fromAccountNumber: accountNumber,
+        fromRoutingNumber: routingNumber,
+        toAccountType: 'INTERNAL',
+        toAccountNumber: accountJson.accountNumber,
+        toRoutingNumber: accountJson.routingNumber
+      };
+    } else {
+      accountJson.balanceInCents -= amountInCents;
+
+      createTransactionProperties = {
+        amountInCents: amountInCents,
+        description: description,
+        fromAccountType: 'INTERNAL',
+        fromAccountNumber: accountJson.accountNumber,
+        fromRoutingNumber: accountJson.routingNumber,
+        toAccountType: 'EXTERNAL',
+        toAccountNumber: accountNumber,
+        toRoutingNumber: routingNumber
+      };
+    }
+
+    return sequelize.transaction(t => {
+      return Account.update(accountJson, {
+        where: {
+          accountNumber: req.swagger.params.accountNumber.value
+        },
+        transaction: t
+      }).then(() => {
+        return Transaction.create(
+          createTransactionProperties,
+          {transaction: t}
+        );
+      });
+    });
+  }).then(
+    transaction => {
+      res.json(transaction.toJSON());
+    }
+  ).catch(function(err) {
+    res.status(400);
+
+    res.json({
+      'message': err.message
+    });
+
+    console.error(err);
+  });
 }
 
 //POST /account/{fromAccountNumber}/transfer/{toAccountNumber}

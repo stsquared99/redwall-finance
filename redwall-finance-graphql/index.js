@@ -4,7 +4,7 @@ const graphQLSchema = require('swagger-to-graphql');
 const { graphqlExpress, graphiqlExpress } = require('apollo-server-express');
 
 
-const proxyUrl = 'http://localhost:10010';
+const proxyUrl = 'http://redwall_finance_api:10010';
 const pathToSwaggerSchema = './redwall.json';
 const customHeaders = {}
 

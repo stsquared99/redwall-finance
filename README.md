@@ -15,3 +15,4 @@ and
 ## Services:
 
 http://localhost:10010/docs (API Browser)
+http://localhost:3009/graphiql (GraphiQL Browser)

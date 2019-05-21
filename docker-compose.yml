@@ -1,13 +1,5 @@
 version: '3'
 services:
-  postgres:
-    container_name: redwall_finance_postgres
-    environment:
-      POSTGRES_PASSWORD: postgres
-    image: postgres:9.6
-    volumes:
-      - ./redwall-finance-postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
-
   api:
     build: ./redwall-finance-api
     command: ["./wait-for-it.sh", "redwall_finance_postgres:5432", "--", "node", "app.js"]
@@ -21,3 +13,20 @@ services:
       - postgres:redwall_finance_postgres
     ports:
       - 10010:10010
+  graphql:
+    build: ./redwall-finance-graphql
+    container_name: redwall_finance_graphql
+    depends_on:
+      - api
+    image: redwall_finance_graphql:latest
+    links:
+      - api:redwall_finance_api
+    ports:
+      - 3009:3009
+  postgres:
+    container_name: redwall_finance_postgres
+    environment:
+      POSTGRES_PASSWORD: postgres
+    image: postgres:9.6
+    volumes:
+      - ./redwall-finance-postgres/init.sql:/docker-entrypoint-initdb.d/init.sql

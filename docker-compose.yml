@@ -1,0 +1,22 @@
+version: '3'
+services:
+  postgres:
+    container_name: redwall_finance_postgres
+    environment:
+      POSTGRES_PASSWORD: postgres
+    image: postgres:9.6
+    volumes:
+      - ./redwall-finance-postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  api:
+    build: ./redwall-finance-api
+    container_name: redwall_finance_api
+    depends_on:
+      - postgres
+    environment:
+      NODE_ENV: production
+    image: redwall_finance_api:latest
+    links:
+      - postgres:redwall_finance_postgres
+    ports:
+      - 10010:10010

@@ -17,7 +17,7 @@
   "production": {
     "database": "redwall_finance_production",
     "dialect": "postgres",
-    "host": "127.0.0.1",
+    "host": "redwall_finance_postgres",
     "logging": false,
     "password": "postgres",
     "username": "postgres"

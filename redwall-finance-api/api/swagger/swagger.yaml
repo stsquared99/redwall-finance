@@ -252,6 +252,44 @@ definitions:
     type: array
     items:
       $ref: "#/definitions/UserResponse"
+  TranscationResponse:
+    required:
+      - transactionId
+      - amountInCents
+      - description
+      - fromAccountType
+      - fromAccountNumber
+      - fromRoutingNumber
+      - toAccountType
+      - toAccountNumber
+      - toRoutingNumber
+      - createdAt
+      - updatedAt
+    properties:
+      transactionId:
+        type: integer
+      amountInCents:
+        type: integer
+      description:
+        type: string
+      fromAccountType:
+        type: string
+        enum: ['ATM', 'DEBIT', 'EXTERNAL', 'INTERNAL']
+      fromAccountNumber:
+        type: string
+      fromRoutingNumber:
+        type: string
+      toAccountType:
+        type: string
+        enum: ['ATM', 'DEBIT', 'EXTERNAL', 'INTERNAL']
+      toAccountNumber:
+        type: integer
+      toRoutingNumber:
+        type: string
+      createdAt:
+        type: string
+      updatedAt:
+        type: string
   UserPatchProperties:
     properties:
       firstName:

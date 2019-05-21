@@ -62,7 +62,9 @@ var User = models.User;
 describe('/user', function() {
   describe('post', function() {
     beforeEach(
-      done => sequelize.query('TRUNCATE TABLE "Users"').asCallback(done));
+      done => sequelize.query(
+        'DELETE FROM "Users" WHERE "userId" > 0'
+      ).asCallback(done));
 
     it('should respond with 200 Success', function(done) {
       /*eslint-disable*/

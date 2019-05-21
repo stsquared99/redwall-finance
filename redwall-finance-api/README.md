@@ -1,3 +1,3 @@
 # Redwall Finance API
 
-## Provides a REST API with documentation
+### Provides a REST API with documentation

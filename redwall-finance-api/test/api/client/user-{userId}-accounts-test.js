@@ -52,73 +52,92 @@ customFormats(ZSchema);
 
 var validator = new ZSchema({});
 var supertest = require('supertest');
-var api = supertest('http://localhost:10010'); // supertest init;
+var api = supertest('http://localhost:3000'); // supertest init;
 var expect = chai.expect;
 
+var models = require('../../../models');
+
+var sequelize = models.sequelize;
+
 describe('/user/{userId}/accounts', function() {
+  beforeEach(
+    done => sequelize.query(
+      'DELETE FROM "Transactions" WHERE "transactionId" > 0; ' +
+      'DELETE FROM "Accounts" WHERE "accountNumber" > 0; ' +
+      'DELETE FROM "Users" WHERE "userId" > 0; '
+    ).asCallback(done)
+  );
+
   describe('get', function() {
     it('should respond with 200 Success', function(done) {
       /*eslint-disable*/
       var schema = {
-        "type": "array",
-        "items": {
-          "required": [
-            "accountNumber",
-            "routingNumber",
-            "balanceInCents",
-            "type",
-            "status",
-            "createdAt",
-            "updatedAt",
-            "userId"
+        'type': 'array',
+        'items': {
+          'required': [
+            'accountNumber',
+            'routingNumber',
+            'balanceInCents',
+            'type',
+            'status',
+            'createdAt',
+            'updatedAt',
+            'userId'
           ],
-          "properties": {
-            "accountNumber": {
-              "type": "integer"
+          'properties': {
+            'accountNumber': {
+              'type': 'integer'
             },
-            "routingNumber": {
-              "type": "integer"
+            'routingNumber': {
+              'type': 'integer'
             },
-            "balanceInCents": {
-              "type": "integer"
+            'balanceInCents': {
+              'type': 'integer'
             },
-            "type": {
-              "type": "string",
-              "enum": [
-                "CHECKING",
-                "SAVINGS"
+            'type': {
+              'type': 'string',
+              'enum': [
+                'CHECKING',
+                'SAVINGS'
               ]
             },
-            "status": {
-              "type": "string",
-              "enum": [
-                "OPEN",
-                "CLOSED",
-                "LOCKED"
+            'status': {
+              'type': 'string',
+              'enum': [
+                'OPEN',
+                'CLOSED',
+                'LOCKED'
               ]
             },
-            "createdAt": {
-              "type": "string"
+            'createdAt': {
+              'type': 'string'
             },
-            "updatedAt": {
-              "type": "string"
+            'updatedAt': {
+              'type': 'string'
             },
-            "userId": {
-              "type": "integer"
+            'userId': {
+              'type': 'integer'
             }
           }
         }
       };
 
-      /*eslint-enable*/
-      api.get('/user/{userId PARAM GOES HERE}/accounts')
-      .set('Content-Type', 'application/json')
-      .expect(200)
-      .end(function(err, res) {
-        if (err) return done(err);
+      sequelizeFixtures.loadFile(
+        './test/fixtures/single_account.yaml', models, {
+          log: function() {}
+        }
+      ).then(() => {
+        api.get('/user/1/accounts')
+          .set('Content-Type', 'application/json')
+          .expect(200)
+          .end(function(err, res) {
+            if (err) {
+              return done(err);
+            }
 
-        expect(validator.validate(res.body, schema)).to.be.true;
-        done();
+            expect(validator.validate(res.body, schema)).to.be.true;
+            done();
+          });
       });
     });
 

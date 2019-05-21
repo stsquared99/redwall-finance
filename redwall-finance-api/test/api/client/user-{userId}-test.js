@@ -52,68 +52,95 @@ customFormats(ZSchema);
 
 var validator = new ZSchema({});
 var supertest = require('supertest');
-var api = supertest('http://localhost:10010'); // supertest init;
+var api = supertest('http://localhost:3000'); // supertest init;
 var expect = chai.expect;
 
+var models = require('../../../models');
+
+var sequelize = models.sequelize;
+
 describe('/user/{userId}', function() {
+  beforeEach(
+    done => sequelize.query(
+      'DELETE FROM "Transactions" WHERE "transactionId" > 0; ' +
+      'DELETE FROM "Accounts" WHERE "accountNumber" > 0; ' +
+      'DELETE FROM "Users" WHERE "userId" > 0; '
+    ).asCallback(done)
+  );
+
   describe('delete', function() {
     it('should respond with 204 No Content', function(done) {
-      api.del('/user/{userId PARAM GOES HERE}')
-      .set('Content-Type', 'application/json')
-      .expect(204)
-      .end(function(err, res) {
-        if (err) return done(err);
+      sequelizeFixtures.loadFile(
+        './test/fixtures/single_user.yaml', models, {
+          log: function() {}
+        }
+      ).then(() => {
+        api.del('/user/1')
+          .set('Content-Type', 'application/json')
+          .expect(204)
+          .end(function(err, res) {
+            if (err) {
+              return done(err);
+            }
 
-        expect(res.body).to.equal(null); // non-json response or no schema
-        done();
+            expect(res.body).to.equal('');
+            done();
+          });
       });
     });
-    
+
   });
 
   describe('get', function() {
     it('should respond with 200 Success', function(done) {
       /*eslint-disable*/
       var schema = {
-        "required": [
-          "userId",
-          "firstName",
-          "lastName",
-          "email",
-          "createdAt",
-          "updatedAt"
+        'required': [
+          'userId',
+          'firstName',
+          'lastName',
+          'email',
+          'createdAt',
+          'updatedAt'
         ],
-        "properties": {
-          "userId": {
-            "type": "integer"
+        'properties': {
+          'userId': {
+            'type': 'integer'
           },
-          "firstName": {
-            "type": "string"
+          'firstName': {
+            'type': 'string'
           },
-          "lastName": {
-            "type": "string"
+          'lastName': {
+            'type': 'string'
           },
-          "email": {
-            "type": "string"
+          'email': {
+            'type': 'string'
           },
-          "createdAt": {
-            "type": "string"
+          'createdAt': {
+            'type': 'string'
           },
-          "updatedAt": {
-            "type": "string"
+          'updatedAt': {
+            'type': 'string'
           }
         }
       };
 
-      /*eslint-enable*/
-      api.get('/user/{userId PARAM GOES HERE}')
-      .set('Content-Type', 'application/json')
-      .expect(200)
-      .end(function(err, res) {
-        if (err) return done(err);
+      sequelizeFixtures.loadFile(
+        './test/fixtures/single_user.yaml', models, {
+          log: function() {}
+        }
+      ).then(() => {
+        api.get('/user/1')
+          .set('Content-Type', 'application/json')
+          .expect(200)
+          .end(function(err, res) {
+            if (err) {
+              return done(err);
+            }
 
-        expect(validator.validate(res.body, schema)).to.be.true;
-        done();
+            expect(validator.validate(res.body, schema)).to.be.true;
+            done();
+          });
       });
     });
 
@@ -123,48 +150,55 @@ describe('/user/{userId}', function() {
     it('should respond with 200 Success', function(done) {
       /*eslint-disable*/
       var schema = {
-        "required": [
-          "userId",
-          "firstName",
-          "lastName",
-          "email",
-          "createdAt",
-          "updatedAt"
+        'required': [
+          'userId',
+          'firstName',
+          'lastName',
+          'email',
+          'createdAt',
+          'updatedAt'
         ],
-        "properties": {
-          "userId": {
-            "type": "integer"
+        'properties': {
+          'userId': {
+            'type': 'integer'
           },
-          "firstName": {
-            "type": "string"
+          'firstName': {
+            'type': 'string'
           },
-          "lastName": {
-            "type": "string"
+          'lastName': {
+            'type': 'string'
           },
-          "email": {
-            "type": "string"
+          'email': {
+            'type': 'string'
           },
-          "createdAt": {
-            "type": "string"
+          'createdAt': {
+            'type': 'string'
           },
-          "updatedAt": {
-            "type": "string"
+          'updatedAt': {
+            'type': 'string'
           }
         }
       };
 
-      /*eslint-enable*/
-      api.patch('/user/{userId PARAM GOES HERE}')
-      .set('Content-Type', 'application/json')
-      .send({
-        userProperties: 'DATA GOES HERE'
-      })
-      .expect(200)
-      .end(function(err, res) {
-        if (err) return done(err);
+      sequelizeFixtures.loadFile(
+        './test/fixtures/single_user.yaml', models, {
+          log: function() {}
+        }
+      ).then(() => {
+        api.patch('/user/1')
+          .set('Content-Type', 'application/json')
+          .send({
+            email: 'joe.bloggs1@example.com'
+          })
+          .expect(200)
+          .end(function(err, res) {
+            if (err) {
+              return done(err);
+            }
 
-        expect(validator.validate(res.body, schema)).to.be.true;
-        done();
+            expect(validator.validate(res.body, schema)).to.be.true;
+            done();
+          });
       });
     });
 

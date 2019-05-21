@@ -13,3 +13,11 @@ fixtures:
     type: CHECKING
     status: OPEN
     userId: 1
+- model: Account
+  data:
+    accountNumber: 2
+    routingNumber: 222222
+    balanceInCents: 100000
+    type: SAVINGS
+    status: OPEN
+    userId: 1

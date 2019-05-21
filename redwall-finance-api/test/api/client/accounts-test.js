@@ -52,7 +52,7 @@ customFormats(ZSchema);
 
 var validator = new ZSchema({});
 var supertest = require('supertest');
-var api = supertest('http://localhost:10010'); // supertest init;
+var api = supertest('http://localhost:3000'); // supertest init;
 var expect = chai.expect;
 
 describe('/accounts', function() {
@@ -60,51 +60,51 @@ describe('/accounts', function() {
     it('should respond with 200 Success', function(done) {
       /*eslint-disable*/
       var schema = {
-        "type": "array",
-        "items": {
-          "required": [
-            "accountNumber",
-            "routingNumber",
-            "balanceInCents",
-            "type",
-            "status",
-            "createdAt",
-            "updatedAt",
-            "userId"
+        'type': 'array',
+        'items': {
+          'required': [
+            'accountNumber',
+            'routingNumber',
+            'balanceInCents',
+            'type',
+            'status',
+            'createdAt',
+            'updatedAt',
+            'userId'
           ],
-          "properties": {
-            "accountNumber": {
-              "type": "integer"
+          'properties': {
+            'accountNumber': {
+              'type': 'integer'
             },
-            "routingNumber": {
-              "type": "integer"
+            'routingNumber': {
+              'type': 'integer'
             },
-            "balanceInCents": {
-              "type": "integer"
+            'balanceInCents': {
+              'type': 'integer'
             },
-            "type": {
-              "type": "string",
-              "enum": [
-                "CHECKING",
-                "SAVINGS"
+            'type': {
+              'type': 'string',
+              'enum': [
+                'CHECKING',
+                'SAVINGS'
               ]
             },
-            "status": {
-              "type": "string",
-              "enum": [
-                "OPEN",
-                "CLOSED",
-                "LOCKED"
+            'status': {
+              'type': 'string',
+              'enum': [
+                'OPEN',
+                'CLOSED',
+                'LOCKED'
               ]
             },
-            "createdAt": {
-              "type": "string"
+            'createdAt': {
+              'type': 'string'
             },
-            "updatedAt": {
-              "type": "string"
+            'updatedAt': {
+              'type': 'string'
             },
-            "userId": {
-              "type": "integer"
+            'userId': {
+              'type': 'integer'
             }
           }
         }
@@ -112,14 +112,16 @@ describe('/accounts', function() {
 
       /*eslint-enable*/
       api.get('/accounts')
-      .set('Content-Type', 'application/json')
-      .expect(200)
-      .end(function(err, res) {
-        if (err) return done(err);
+        .set('Content-Type', 'application/json')
+        .expect(200)
+        .end(function(err, res) {
+          if (err) {
+            return done(err);
+          }
 
-        expect(validator.validate(res.body, schema)).to.be.true;
-        done();
-      });
+          expect(validator.validate(res.body, schema)).to.be.true;
+          done();
+        });
     });
 
   });

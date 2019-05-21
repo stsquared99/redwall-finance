@@ -52,7 +52,7 @@ customFormats(ZSchema);
 
 var validator = new ZSchema({});
 var supertest = require('supertest');
-var api = supertest('http://localhost:10010'); // supertest init;
+var api = supertest('http://localhost:3000'); // supertest init;
 var expect = chai.expect;
 
 describe('/users', function() {
@@ -60,34 +60,34 @@ describe('/users', function() {
     it('should respond with 200 Success', function(done) {
       /*eslint-disable*/
       var schema = {
-        "type": "array",
-        "items": {
-          "required": [
-            "userId",
-            "firstName",
-            "lastName",
-            "email",
-            "createdAt",
-            "updatedAt"
+        'type': 'array',
+        'items': {
+          'required': [
+            'userId',
+            'firstName',
+            'lastName',
+            'email',
+            'createdAt',
+            'updatedAt'
           ],
-          "properties": {
-            "userId": {
-              "type": "integer"
+          'properties': {
+            'userId': {
+              'type': 'integer'
             },
-            "firstName": {
-              "type": "string"
+            'firstName': {
+              'type': 'string'
             },
-            "lastName": {
-              "type": "string"
+            'lastName': {
+              'type': 'string'
             },
-            "email": {
-              "type": "string"
+            'email': {
+              'type': 'string'
             },
-            "createdAt": {
-              "type": "string"
+            'createdAt': {
+              'type': 'string'
             },
-            "updatedAt": {
-              "type": "string"
+            'updatedAt': {
+              'type': 'string'
             }
           }
         }
@@ -95,14 +95,16 @@ describe('/users', function() {
 
       /*eslint-enable*/
       api.get('/users')
-      .set('Content-Type', 'application/json')
-      .expect(200)
-      .end(function(err, res) {
-        if (err) return done(err);
+        .set('Content-Type', 'application/json')
+        .expect(200)
+        .end(function(err, res) {
+          if (err) {
+            return done(err);
+          }
 
-        expect(validator.validate(res.body, schema)).to.be.true;
-        done();
-      });
+          expect(validator.validate(res.body, schema)).to.be.true;
+          done();
+        });
     });
 
   });

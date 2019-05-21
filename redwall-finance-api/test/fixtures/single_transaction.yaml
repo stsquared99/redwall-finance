@@ -8,7 +8,7 @@ fixtures:
 - model: Account
   data:
     accountNumber: 1
-    routingNumber: 111111111111
+    routingNumber: 111111
     balanceInCents: 100000
     type: CHECKING
     status: OPEN
@@ -19,8 +19,8 @@ fixtures:
     amountInCents: 10000
     description: testing
     fromAccountType: INTERNAL
-    fromAccountNumber: 1,
-    fromRoutingNumber: 111111111111,
+    fromAccountNumber: 1
+    fromRoutingNumber: 111111
     toAccountType: ATM
-    toAccountNumber: 0,
-    toRoutingNumber: 0,
+    toAccountNumber: 0
+    toRoutingNumber: 0

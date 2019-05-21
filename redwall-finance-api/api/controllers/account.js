@@ -113,6 +113,8 @@ function doDebitTransaction(req, res) {
     var amountInCents = transactionProperties.value.amountInCents;
     var type = transactionProperties.value.type;
 
+    var createTransactionProperties;
+
     if (type === 'CHARGE') {
       accountJson.balanceInCents -= amountInCents;
 

@@ -58,17 +58,17 @@ var expect = chai.expect;
 var models = require('../../../models');
 
 var sequelize = models.sequelize;
-var User = models.User;
 
 describe('/user', function() {
-  describe('post', function() {
-    beforeEach(
-      done => sequelize.query(
-        'DELETE FROM "Transactions" WHERE "transactionId" > 0; ' +
-        'DELETE FROM "Accounts" WHERE "accountNumber" > 0; ' +
-        'DELETE FROM "Users" WHERE "userId" > 0; '
-      ).asCallback(done));
+  beforeEach(
+    done => sequelize.query(
+      'DELETE FROM "Transactions" WHERE "transactionId" > 0; ' +
+      'DELETE FROM "Accounts" WHERE "accountNumber" > 0; ' +
+      'DELETE FROM "Users" WHERE "userId" > 0; '
+    ).asCallback(done)
+  );
 
+  describe('post', function() {
     it('should respond with 200 Success', function(done) {
       /*eslint-disable*/
       var schema = {
@@ -135,9 +135,10 @@ describe('/user', function() {
       };
 
       sequelizeFixtures.loadFile(
-        './test/fixtures/single_user.yaml', models, {log: function() {}}
+        './test/fixtures/single_user.yaml', models, {
+          log: function() {}
+        }
       ).then(() => {
-
         api.post('/user')
           .set('Content-Type', 'application/json')
           .send({

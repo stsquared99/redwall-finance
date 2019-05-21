@@ -52,88 +52,108 @@ customFormats(ZSchema);
 
 var validator = new ZSchema({});
 var supertest = require('supertest');
-var api = supertest('http://localhost:10010'); // supertest init;
+var api = supertest('http://localhost:3000'); // supertest init;
 var expect = chai.expect;
 
+var models = require('../../../models');
+
+var sequelize = models.sequelize;
 describe('/account/{accountNumber}/debit', function() {
+  beforeEach(
+    done => sequelize.query(
+      'DELETE FROM "Transactions" WHERE "transactionId" > 0; ' +
+      'DELETE FROM "Accounts" WHERE "accountNumber" > 0; ' +
+      'DELETE FROM "Users" WHERE "userId" > 0; '
+    ).asCallback(done)
+  );
+
   describe('post', function() {
     it('should respond with 200 Success', function(done) {
       /*eslint-disable*/
       var schema = {
-        "required": [
-          "transactionId",
-          "amountInCents",
-          "description",
-          "fromAccountType",
-          "fromAccountNumber",
-          "fromRoutingNumber",
-          "toAccountType",
-          "toAccountNumber",
-          "toRoutingNumber",
-          "createdAt",
-          "updatedAt"
+        'required': [
+          'transactionId',
+          'amountInCents',
+          'description',
+          'fromAccountType',
+          'fromAccountNumber',
+          'fromRoutingNumber',
+          'toAccountType',
+          'toAccountNumber',
+          'toRoutingNumber',
+          'createdAt',
+          'updatedAt'
         ],
-        "properties": {
-          "transactionId": {
-            "type": "integer"
+        'properties': {
+          'transactionId': {
+            'type': 'integer'
           },
-          "amountInCents": {
-            "type": "integer"
+          'amountInCents': {
+            'type': 'integer'
           },
-          "description": {
-            "type": "string"
+          'description': {
+            'type': 'string'
           },
-          "fromAccountType": {
-            "type": "string",
-            "enum": [
-              "ATM",
-              "DEBIT",
-              "EXTERNAL",
-              "INTERNAL"
+          'fromAccountType': {
+            'type': 'string',
+            'enum': [
+              'ATM',
+              'DEBIT',
+              'EXTERNAL',
+              'INTERNAL'
             ]
           },
-          "fromAccountNumber": {
-            "type": "integer"
+          'fromAccountNumber': {
+            'type': 'integer'
           },
-          "fromRoutingNumber": {
-            "type": "integer"
+          'fromRoutingNumber': {
+            'type': 'integer'
           },
-          "toAccountType": {
-            "type": "string",
-            "enum": [
-              "ATM",
-              "DEBIT",
-              "EXTERNAL",
-              "INTERNAL"
+          'toAccountType': {
+            'type': 'string',
+            'enum': [
+              'ATM',
+              'DEBIT',
+              'EXTERNAL',
+              'INTERNAL'
             ]
           },
-          "toAccountNumber": {
-            "type": "integer"
+          'toAccountNumber': {
+            'type': 'integer'
           },
-          "toRoutingNumber": {
-            "type": "integer"
+          'toRoutingNumber': {
+            'type': 'integer'
           },
-          "createdAt": {
-            "type": "string"
+          'createdAt': {
+            'type': 'string'
           },
-          "updatedAt": {
-            "type": "string"
+          'updatedAt': {
+            'type': 'string'
           }
         }
       };
 
-      /*eslint-enable*/
-      api.post('/account/{accountNumber PARAM GOES HERE}/debit')
-      .set('Content-Type', 'application/json')
-      .send({
-        transactionProperties: 'DATA GOES HERE'
-      })
-      .expect(200)
-      .end(function(err, res) {
-        if (err) return done(err);
+      sequelizeFixtures.loadFile(
+        './test/fixtures/single_account.yaml', models, {
+          log: function() {}
+        }
+      ).then(() => {
+        api.post('/account/1/debit')
+          .set('Content-Type', 'application/json')
+          .send({
+            amountInCents: 10000,
+            type: 'CHARGE'
+          }).expect(200)
+          .end(function(err, res) {
+            if (err) {
+              return done(err);
+            }
 
-        expect(validator.validate(res.body, schema)).to.be.true;
-        done();
+            expect(validator.validate(res.body, schema)).to.be.true;
+            done();
+          });
+      }).catch(function(err) {
+        done(err);
       });
     });
 

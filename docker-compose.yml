@@ -10,6 +10,7 @@ services:
 
   api:
     build: ./redwall-finance-api
+    command: ["./wait-for-it.sh", "redwall_finance_postgres:5432", "--", "node", "app.js"]
     container_name: redwall_finance_api
     depends_on:
       - postgres

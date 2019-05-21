@@ -69,9 +69,12 @@ function doATMTransaction(req, res) {
       return Account.update(accountJson, {
         where: {
           accountNumber: req.swagger.params.accountNumber.value
-        }
+        },
+        transaction: t
       }).then(() => {
-        return Transaction.create(createTransactionProperties);
+        return Transaction.create(
+          createTransactionProperties, {transaction: t}
+        );
       });
     });
   }).then(
@@ -138,9 +141,13 @@ function doDebitTransaction(req, res) {
       return Account.update(accountJson, {
         where: {
           accountNumber: req.swagger.params.accountNumber.value
-        }
+        },
+        transaction: t
       }).then(() => {
-        return Transaction.create(createTransactionProperties);
+        return Transaction.create(
+          createTransactionProperties,
+          {transaction: t}
+        );
       });
     });
   }).then(
@@ -159,10 +166,95 @@ function doDebitTransaction(req, res) {
 }
 
 //POST /account/{accountNumber}/transfer
-function doExternalTransfer(req, res) {}
+function doExternalTransfer(req, res) {
+}
 
 //POST /account/{fromAccountNumber}/transfer/{toAccountNumber}
-function doInternalTransfer(req, res) {}
+function doInternalTransfer(req, res) {
+  var transferProperties = req.swagger.params.transferProperties;
+
+  var amountInCents = transferProperties.value.amountInCents;
+  var description = transferProperties.value.description;
+  var type = transferProperties.value.type;
+
+  if (description === undefined || description === null) {
+    description = '';
+  }
+
+  var transactionProperties = {
+    amountInCents: amountInCents,
+    description: description,
+    fromAccountType: 'INTERNAL',
+    toAccountType: 'INTERNAL',
+  };
+
+  sequelize.transaction(t => {
+    return Account.findOne({
+      where: {
+        accountNumber: req.swagger.params.fromAccountNumber.value
+      }
+    }).then(fromAccount => {
+      if (fromAccount === null) {
+        throw new Error('From account not found');
+      }
+
+      var fromAccountJson = fromAccount.toJSON();
+
+      fromAccountJson.balanceInCents -= amountInCents;
+
+      transactionProperties.fromAccountNumber = fromAccountJson.accountNumber;
+      transactionProperties.fromRoutingNumber = fromAccountJson.routingNumber;
+
+      return Account.update(fromAccountJson, {
+        where: {
+          accountNumber: req.swagger.params.fromAccountNumber.value
+        },
+        transaction: t
+      });
+    }).then(() => {
+      return Account.findOne({
+        where: {
+          accountNumber: req.swagger.params.toAccountNumber.value
+        }
+      });
+    }).then(toAccount => {
+      if (toAccount === null) {
+        throw new Error('To account not found');
+      }
+
+      var toAccountJson = toAccount.toJSON();
+
+      toAccountJson.balanceInCents += amountInCents;
+
+      transactionProperties.toAccountNumber = toAccountJson.accountNumber;
+      transactionProperties.toRoutingNumber = toAccountJson.routingNumber;
+
+      return Account.update(toAccountJson, {
+        where: {
+          accountNumber: req.swagger.params.toAccountNumber.value
+        },
+        transaction: t
+      });
+    }).then(() => {
+      return Transaction.create(
+        transactionProperties,
+        {transaction: t}
+      );
+    });
+  }).then(
+    transaction => {
+      res.json(transaction.toJSON());
+    }
+  ).catch(function(err) {
+    res.status(400);
+
+    res.json({
+      'message': err.message
+    });
+
+    console.error(err);
+  });
+}
 
 //GET /account/{id} operationId
 function getAccount(req, res, next) {

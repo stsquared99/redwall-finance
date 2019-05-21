@@ -20,10 +20,10 @@ paths:
     x-swagger-router-controller: account
     get:
       operationId: getAccount
-      description: get an account
+      description: Get an account
       parameters:
         - name: accountNumber
-          description: account number
+          description: Account number
           type: integer
           in: path
           required: true
@@ -38,7 +38,7 @@ paths:
             $ref: "#/definitions/ErrorResponse"
     patch:
       operationId: updateAccount
-      description: update an account
+      description: Update an account
       parameters:
         - name: accountProperties
           description: Account properties
@@ -47,7 +47,7 @@ paths:
           schema:
             $ref: "#/definitions/AccountPatchProperties"
         - name: accountNumber
-          description: account number
+          description: Account number
           type: integer
           in: path
           required: true
@@ -64,10 +64,10 @@ paths:
     x-swagger-router-controller: account
     post:
       operationId: doATMTransaction
-      description: do an atm transaction
+      description: Do an atm transaction
       parameters:
         - name: accountNumber
-          description: account number
+          description: Account number
           type: integer
           in: path
           required: true
@@ -90,10 +90,10 @@ paths:
     x-swagger-router-controller: account
     post:
       operationId: doDebitTransaction
-      description: do a debit transaction
+      description: Do a debit transaction
       parameters:
         - name: accountNumber
-          description: account number
+          description: Account number
           type: integer
           in: path
           required: true
@@ -112,14 +112,71 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /account/{accountNumber}/transfer:
+    x-swagger-router-controller: account
+    post:
+      operationId: doExternalTransfer
+      description: Do a transfer to an external account
+      parameters:
+        - name: accountNumber
+          description: Account number
+          type: integer
+          in: path
+          required: true
+        - name: transferProperties
+          description: Transfer properties
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/ExternalTransferProperties"
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/TransactionResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /account/{fromAccountNumber}/transfer/{toAccountNumber}:
+    x-swagger-router-controller: account
+    post:
+      operationId: doInternalTransfer
+      description: Do a transfer between two internal accounts
+      parameters:
+        - name: fromAccountNumber
+          description: from account number
+          type: integer
+          in: path
+          required: true
+        - name: toAccountNumber
+          description: to account number
+          type: integer
+          in: path
+          required: true
+        - name: transferProperties
+          description: Transfer properties
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/InternalTransferProperties"
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/TransactionResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /account/{accountNumber}/transactions:
     x-swagger-router-controller: account
     get:
       operationId: getAccountTransactions
-      description: get the transactions for an account
+      description: Get the transactions for an account
       parameters:
         - name: accountNumber
-          description: account number
+          description: Account number
           type: integer
           in: path
           required: true
@@ -136,7 +193,7 @@ paths:
     x-swagger-router-controller: accounts
     get:
       operationId: getAccounts
-      description: get the accounts list
+      description: Get the accounts list
       responses:
         "200":
           description: Success
@@ -150,7 +207,7 @@ paths:
     x-swagger-router-controller: transaction
     get:
       operationId: getTransaction
-      description: get an transaction
+      description: Get an transaction
       parameters:
         - name: transactionId
           description: transaction number
@@ -170,7 +227,7 @@ paths:
     x-swagger-router-controller: transactions
     get:
       operationId: getTransactions
-      description: get the transaction list
+      description: Get the transaction list
       responses:
         "200":
           description: Success
@@ -184,7 +241,7 @@ paths:
     x-swagger-router-controller: user
     post:
       operationId: addUser
-      description: add a new user
+      description: Add a new user
       parameters:
         - name: userProperties
           description: User properties
@@ -208,7 +265,7 @@ paths:
       description: remove a user
       parameters:
         - name: userId
-          description: user ID
+          description: User ID
           type: integer
           in: path
           required: true
@@ -221,10 +278,10 @@ paths:
             $ref: "#/definitions/ErrorResponse"
     get:
       operationId: getUser
-      description: get a user
+      description: Get a user
       parameters:
         - name: userId
-          description: user ID
+          description: User ID
           type: integer
           in: path
           required: true
@@ -239,7 +296,7 @@ paths:
             $ref: "#/definitions/ErrorResponse"
     patch:
       operationId: updateUser
-      description: update a user
+      description: Update a user
       parameters:
         - name: userProperties
           description: User properties
@@ -248,7 +305,7 @@ paths:
           schema:
             $ref: "#/definitions/UserPatchProperties"
         - name: userId
-          description: user ID
+          description: User ID
           type: integer
           in: path
           required: true
@@ -265,7 +322,7 @@ paths:
     x-swagger-router-controller: user
     post:
       operationId: addUserAccount
-      description: add a new account for this user
+      description: Add a new account for this user
       parameters:
         - name: accountProperties
           description: Account properties
@@ -274,7 +331,7 @@ paths:
           schema:
             $ref: "#/definitions/AccountPostProperties"
         - name: userId
-          description: user ID
+          description: User ID
           type: integer
           in: path
           required: true
@@ -291,10 +348,10 @@ paths:
     x-swagger-router-controller: user
     get:
       operationId: getUserAccounts
-      description: get the accounts belonging to a user
+      description: Get the accounts belonging to a user
       parameters:
         - name: userId
-          description: user ID
+          description: User ID
           type: integer
           in: path
           required: true
@@ -311,7 +368,7 @@ paths:
     x-swagger-router-controller: users
     get:
       operationId: getUsers
-      description: get the users list
+      description: Get the users list
       responses:
         "200":
           description: Success
@@ -390,6 +447,24 @@ definitions:
       type:
         type: string
         enum: [CHARGE, CREDIT]
+  ExternalTransferProperties:
+    required:
+      - amountInCents
+      - accountNumber
+      - routingNumber
+      - type
+    properties:
+      amountInCents:
+        type: integer
+      accountNumber:
+        type: integer
+      routingNumber:
+        type: integer
+      description:
+        type: string
+      type:
+        type: string
+        enum: [FROM_EXTERNAL, TO_EXTERNAL]
   GetAccountsListResponse:
     type: array
     items:
@@ -402,6 +477,14 @@ definitions:
     type: array
     items:
       $ref: "#/definitions/UserResponse"
+  InternalTransferProperties:
+    required:
+      - amountInCents
+    properties:
+      amountInCents:
+        type: integer
+      description:
+        type: string
   TransactionResponse:
     required:
       - transactionId

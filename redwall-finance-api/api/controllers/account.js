@@ -13,6 +13,8 @@ var Transaction = models.Transaction;
 module.exports = {
   doATMTransaction,
   doDebitTransaction,
+  doExternalTransfer,
+  doInternalTransfer,
   getAccount,
   getAccountTransactions,
   updateAccount
@@ -138,6 +140,12 @@ function doDebitTransaction(req, res) {
     console.error(err);
   });
 }
+
+//POST /account/{accountNumber}/transfer
+function doExternalTransfer(req, res) {}
+
+//POST /account/{fromAccountNumber}/transfer/{toAccountNumber}
+function doInternalTransfer(req, res) {}
 
 //GET /account/{id} operationId
 function getAccount(req, res, next) {

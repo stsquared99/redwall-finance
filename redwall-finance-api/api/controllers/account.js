@@ -22,49 +22,57 @@ module.exports = {
 
 //POST /account/{accountNumber}/atm
 function doATMTransaction(req, res) {
-  sequelize.transaction(t => {
-    return Account.findOne({
-      where: {
-        userId: req.swagger.params.accountNumber.value
-      }
-    }).then(account => {
-      if (account === null) {
-        throw new Error('Account not found');
-      }
+  Account.findOne({
+    where: {
+      accountNumber: req.swagger.params.accountNumber.value
+    }
+  }).then(account => {
+    if (account === null) {
+      throw new Error('Account not found');
+    }
 
-      var accountJson = account.toJSON();
+    var accountJson = account.toJSON();
+    var amountInCents = req.swagger.params.transactionProperties.value.amountInCents;
+    var type = req.swagger.params.transactionProperties.value.type;
 
-      var amountInCents = req.swagger.params.transactionProperties.value.amountInCents;
-      var type = req.swagger.params.transactionProperties.value.type;
+    var createTransactionProperties;
 
-      var createTransactionProperties;
+    if (type === 'DEPOSIT') {
+      accountJson.balanceInCents += amountInCents;
 
-      if (type === 'DEPOSIT') {
-        createTransactionProperties = {
-          amountInCents: amountInCents,
-          description: 'ATM ' + type,
-          fromAccountType: 'ATM',
-          fromAccountNumber: 0,
-          fromRoutingNumber: 0,
-          toAccountType: 'INTERNAL',
-          toAccountNumber: accountJson.accountNumber,
-          toRoutingNumber: accountJson.routingNumber
-        };
-      } else {
-        createTransactionProperties = {
-          amountInCents: amountInCents,
-          description: 'ATM ' + type,
-          fromAccountType: 'INTERNAL',
-          fromAccountNumber: accountJson.accountNumber,
-          fromRoutingNumber: accountJson.routingNumber,
-          toAccountType: 'ATM',
-          toAccountNumber: 0,
-          toRoutingNumber: 0
-        };
+      createTransactionProperties = {
+        amountInCents: amountInCents,
+        description: 'ATM ' + type,
+        fromAccountType: 'ATM',
+        fromAccountNumber: 0,
+        fromRoutingNumber: 0,
+        toAccountType: 'INTERNAL',
+        toAccountNumber: accountJson.accountNumber,
+        toRoutingNumber: accountJson.routingNumber
+      };
+    } else {
+      accountJson.balanceInCents -= amountInCents;
 
-      }
+      createTransactionProperties = {
+        amountInCents: amountInCents,
+        description: 'ATM ' + type,
+        fromAccountType: 'INTERNAL',
+        fromAccountNumber: accountJson.accountNumber,
+        fromRoutingNumber: accountJson.routingNumber,
+        toAccountType: 'ATM',
+        toAccountNumber: 0,
+        toRoutingNumber: 0
+      };
+    }
 
-      return Transaction.create(createTransactionProperties);
+    return sequelize.transaction(t => {
+      return Account.update(accountJson, {
+        where: {
+          accountNumber: req.swagger.params.accountNumber.value
+        }
+      }).then(() => {
+        return Transaction.create(createTransactionProperties);
+      });
     });
   }).then(
     transaction => {
@@ -83,48 +91,57 @@ function doATMTransaction(req, res) {
 
 //POST /account/{accountNumber}/debit
 function doDebitTransaction(req, res) {
-  sequelize.transaction(t => {
-    return Account.findOne({
-      where: {
-        userId: req.swagger.params.accountNumber.value
-      }
-    }).then(account => {
-      if (account === null) {
-        throw new Error('Account not found');
-      }
+  Account.findOne({
+    where: {
+      accountNumber: req.swagger.params.accountNumber.value
+    }
+  }).then(account => {
+    if (account === null) {
+      throw new Error('Account not found');
+    }
 
-      var accountJson = account.toJSON();
+    var accountJson = account.toJSON();
+    var amountInCents = req.swagger.params.transactionProperties.value.amountInCents;
+    var type = req.swagger.params.transactionProperties.value.type;
 
-      var amountInCents = req.swagger.params.transactionProperties.value.amountInCents;
-      var type = req.swagger.params.transactionProperties.value.type;
+    var createTransactionProperties;
 
-      var createTransactionProperties;
+    if (type === 'CHARGE') {
+      accountJson.balanceInCents -= amountInCents;
 
-      if (type === 'CHARGE') {
-        createTransactionProperties = {
-          amountInCents: amountInCents,
-          description: 'DEBIT ' + type,
-          fromAccountType: 'INTERNAL',
-          fromAccountNumber: accountJson.accountNumber,
-          fromRoutingNumber: accountJson.routingNumber,
-          toAccountType: 'DEBIT',
-          toAccountNumber: 0,
-          toRoutingNumber: 0
-        };
-      } else {
-        createTransactionProperties = {
-          amountInCents: amountInCents,
-          description: 'DEBIT ' + type,
-          fromAccountType: 'DEBIT',
-          fromAccountNumber: 0,
-          fromRoutingNumber: 0,
-          toAccountType: 'INTERNAL',
-          toAccountNumber: accountJson.accountNumber,
-          toRoutingNumber: accountJson.routingNumber
-        };
-      }
+      createTransactionProperties = {
+        amountInCents: amountInCents,
+        description: 'DEBIT ' + type,
+        fromAccountType: 'INTERNAL',
+        fromAccountNumber: accountJson.accountNumber,
+        fromRoutingNumber: accountJson.routingNumber,
+        toAccountType: 'DEBIT',
+        toAccountNumber: 0,
+        toRoutingNumber: 0
+      };
+    } else {
+      accountJson.balanceInCents += amountInCents;
 
-      return Transaction.create(createTransactionProperties);
+      createTransactionProperties = {
+        amountInCents: amountInCents,
+        description: 'DEBIT ' + type,
+        fromAccountType: 'DEBIT',
+        fromAccountNumber: 0,
+        fromRoutingNumber: 0,
+        toAccountType: 'INTERNAL',
+        toAccountNumber: accountJson.accountNumber,
+        toRoutingNumber: accountJson.routingNumber
+      };
+    }
+
+    return sequelize.transaction(t => {
+      return Account.update(accountJson, {
+        where: {
+          accountNumber: req.swagger.params.accountNumber.value
+        }
+      }).then(() => {
+        return Transaction.create(createTransactionProperties);
+      });
     });
   }).then(
     transaction => {

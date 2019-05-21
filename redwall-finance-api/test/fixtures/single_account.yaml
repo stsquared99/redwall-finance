@@ -1,0 +1,15 @@
+fixtures:
+- model: User
+  data:
+    userId: 1
+    firstName: Joe
+    lastName: Bloggs
+    email: joe.bloggs@example.com
+- model: Account
+  data:
+    accountNumber: 1
+    routingNumber: 111111111111
+    balanceInCents: 100000
+    type: CHECKING
+    status: OPEN
+    userId: 1

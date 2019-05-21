@@ -23,6 +23,7 @@
     "pgtools": "^0.3.0",
     "sequelize": "^5.8.6",
     "sequelize-cli": "^5.4.0",
+    "sequelize-fixtures": "^0.10.0",
     "swagger": "^0.7.5",
     "swagger-connect": "^0.1.0",
     "swagger-tools": "^0.10.4"

@@ -1,0 +1,7 @@
+fixtures:
+- model: User
+  data:
+    userId: 1
+    firstName: Joe
+    lastName: Bloggs
+    email: joe.bloggs@example.com

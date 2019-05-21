@@ -1,5 +1,6 @@
 'use strict';
 var chai = require('chai');
+var sequelizeFixtures = require('sequelize-fixtures');
 var ZSchema = require('z-schema');
 var customFormats = module.exports = function(zSchema) {
   // Placeholder file for all custom-formats in known to swagger.json
@@ -63,7 +64,9 @@ describe('/user', function() {
   describe('post', function() {
     beforeEach(
       done => sequelize.query(
-        'DELETE FROM "Users" WHERE "userId" > 0'
+        'DELETE FROM "Transactions" WHERE "transactionId" > 0; ' +
+        'DELETE FROM "Accounts" WHERE "accountNumber" > 0; ' +
+        'DELETE FROM "Users" WHERE "userId" > 0; '
       ).asCallback(done));
 
     it('should respond with 200 Success', function(done) {
@@ -131,17 +134,15 @@ describe('/user', function() {
         }
       };
 
-      User.create({
-        firstName: 'Joe',
-        lastName: 'Bloggs',
-        email: 'joe.bloggs@example.com'
-      }).then(() => {
-        done();
+      sequelizeFixtures.loadFile(
+        './test/fixtures/single_user.yaml', models, {log: function() {}}
+      ).then(() => {
+
         api.post('/user')
           .set('Content-Type', 'application/json')
           .send({
-            firstName: 'Joe',
-            lastName: 'Bloggs',
+            firstName: 'Test',
+            lastName: 'Test',
             email: 'joe.bloggs@example.com'
           })
           .expect(400)

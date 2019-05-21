@@ -1,0 +1,878 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "0.0.1",
+        "title": "Redwall Finance"
+    },
+    "host": "localhost:10010",
+    "basePath": "/",
+    "schemes": [
+        "http",
+        "https"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "paths": {
+        "/account/{accountNumber}": {
+            "x-swagger-router-controller": "account",
+            "get": {
+                "operationId": "getAccount",
+                "description": "Get an account",
+                "parameters": [
+                    {
+                        "name": "accountNumber",
+                        "description": "Account number",
+                        "type": "integer",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/AccountResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "operationId": "updateAccount",
+                "description": "Update an account",
+                "parameters": [
+                    {
+                        "name": "accountProperties",
+                        "description": "Account properties",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/AccountPatchProperties"
+                        }
+                    },
+                    {
+                        "name": "accountNumber",
+                        "description": "Account number",
+                        "type": "integer",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/AccountResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/account/{accountNumber}/atm": {
+            "x-swagger-router-controller": "account",
+            "post": {
+                "operationId": "doATMTransaction",
+                "description": "Do an atm transaction",
+                "parameters": [
+                    {
+                        "name": "accountNumber",
+                        "description": "Account number",
+                        "type": "integer",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "name": "transactionProperties",
+                        "description": "Transaction properties",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ATMTransactionProperties"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/TransactionResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/account/{accountNumber}/debit": {
+            "x-swagger-router-controller": "account",
+            "post": {
+                "operationId": "doDebitTransaction",
+                "description": "Do a debit transaction",
+                "parameters": [
+                    {
+                        "name": "accountNumber",
+                        "description": "Account number",
+                        "type": "integer",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "name": "transactionProperties",
+                        "description": "Transaction properties",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/DebitTransactionProperties"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/TransactionResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/account/{accountNumber}/transfer": {
+            "x-swagger-router-controller": "account",
+            "post": {
+                "operationId": "doExternalTransfer",
+                "description": "Do a transfer to an external account",
+                "parameters": [
+                    {
+                        "name": "accountNumber",
+                        "description": "Account number",
+                        "type": "integer",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "name": "transferProperties",
+                        "description": "Transfer properties",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ExternalTransferProperties"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/TransactionResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/account/{fromAccountNumber}/transfer/{toAccountNumber}": {
+            "x-swagger-router-controller": "account",
+            "post": {
+                "operationId": "doInternalTransfer",
+                "description": "Do a transfer between two internal accounts",
+                "parameters": [
+                    {
+                        "name": "fromAccountNumber",
+                        "description": "from account number",
+                        "type": "integer",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "name": "toAccountNumber",
+                        "description": "to account number",
+                        "type": "integer",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "name": "transferProperties",
+                        "description": "Transfer properties",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/InternalTransferProperties"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/TransactionResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/account/{accountNumber}/transactions": {
+            "x-swagger-router-controller": "account",
+            "get": {
+                "operationId": "getAccountTransactions",
+                "description": "Get the transactions for an account",
+                "parameters": [
+                    {
+                        "name": "accountNumber",
+                        "description": "Account number",
+                        "type": "integer",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/GetTransactionsListResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/accounts": {
+            "x-swagger-router-controller": "accounts",
+            "get": {
+                "operationId": "getAccounts",
+                "description": "Get the accounts list",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/GetAccountsListResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/transaction/{transactionId}": {
+            "x-swagger-router-controller": "transaction",
+            "get": {
+                "operationId": "getTransaction",
+                "description": "Get an transaction",
+                "parameters": [
+                    {
+                        "name": "transactionId",
+                        "description": "transaction number",
+                        "type": "integer",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/TransactionResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/transactions": {
+            "x-swagger-router-controller": "transactions",
+            "get": {
+                "operationId": "getTransactions",
+                "description": "Get the transaction list",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/GetTransactionsListResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/user": {
+            "x-swagger-router-controller": "user",
+            "post": {
+                "operationId": "addUser",
+                "description": "Add a new user",
+                "parameters": [
+                    {
+                        "name": "userProperties",
+                        "description": "User properties",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/UserPostProperties"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/UserResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/{userId}": {
+            "x-swagger-router-controller": "user",
+            "delete": {
+                "operationId": "removeUser",
+                "description": "remove a user",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "description": "User ID",
+                        "type": "integer",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "default": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "get": {
+                "operationId": "getUser",
+                "description": "Get a user",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "description": "User ID",
+                        "type": "integer",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/UserResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "operationId": "updateUser",
+                "description": "Update a user",
+                "parameters": [
+                    {
+                        "name": "userProperties",
+                        "description": "User properties",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/UserPatchProperties"
+                        }
+                    },
+                    {
+                        "name": "userId",
+                        "description": "User ID",
+                        "type": "integer",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/UserResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/{userId}/account": {
+            "x-swagger-router-controller": "user",
+            "post": {
+                "operationId": "addUserAccount",
+                "description": "Add a new account for this user",
+                "parameters": [
+                    {
+                        "name": "accountProperties",
+                        "description": "Account properties",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/AccountPostProperties"
+                        }
+                    },
+                    {
+                        "name": "userId",
+                        "description": "User ID",
+                        "type": "integer",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/AccountResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/{userId}/accounts": {
+            "x-swagger-router-controller": "user",
+            "get": {
+                "operationId": "getUserAccounts",
+                "description": "Get the accounts belonging to a user",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "description": "User ID",
+                        "type": "integer",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/GetAccountsListResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/users": {
+            "x-swagger-router-controller": "users",
+            "get": {
+                "operationId": "getUsers",
+                "description": "Get the users list",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/GetUsersListResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "Error",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/swagger": {
+            "x-swagger-pipe": "swagger_raw"
+        }
+    },
+    "definitions": {
+        "AccountPatchProperties": {
+            "properties": {
+                "routingNumber": {
+                    "type": "integer"
+                },
+                "status": {
+                    "type": "string",
+                    "enum": [
+                        "OPEN",
+                        "CLOSED",
+                        "LOCKED"
+                    ]
+                }
+            }
+        },
+        "AccountPostProperties": {
+            "required": [
+                "routingNumber",
+                "type"
+            ],
+            "properties": {
+                "routingNumber": {
+                    "type": "integer"
+                },
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "CHECKING",
+                        "SAVINGS"
+                    ]
+                }
+            }
+        },
+        "AccountResponse": {
+            "required": [
+                "accountNumber",
+                "routingNumber",
+                "balanceInCents",
+                "type",
+                "status",
+                "createdAt",
+                "updatedAt",
+                "userId"
+            ],
+            "properties": {
+                "accountNumber": {
+                    "type": "integer"
+                },
+                "routingNumber": {
+                    "type": "integer"
+                },
+                "balanceInCents": {
+                    "type": "integer"
+                },
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "CHECKING",
+                        "SAVINGS"
+                    ]
+                },
+                "status": {
+                    "type": "string",
+                    "enum": [
+                        "OPEN",
+                        "CLOSED",
+                        "LOCKED"
+                    ]
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "userId": {
+                    "type": "integer"
+                }
+            }
+        },
+        "ATMTransactionProperties": {
+            "required": [
+                "amountInCents",
+                "type"
+            ],
+            "properties": {
+                "amountInCents": {
+                    "type": "integer"
+                },
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "DEPOSIT",
+                        "WITHDRAWAL"
+                    ]
+                }
+            }
+        },
+        "DebitTransactionProperties": {
+            "required": [
+                "amountInCents",
+                "type"
+            ],
+            "properties": {
+                "amountInCents": {
+                    "type": "integer"
+                },
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "CHARGE",
+                        "CREDIT"
+                    ]
+                }
+            }
+        },
+        "ExternalTransferProperties": {
+            "required": [
+                "amountInCents",
+                "accountNumber",
+                "routingNumber",
+                "type"
+            ],
+            "properties": {
+                "amountInCents": {
+                    "type": "integer"
+                },
+                "accountNumber": {
+                    "type": "integer"
+                },
+                "routingNumber": {
+                    "type": "integer"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "FROM_EXTERNAL",
+                        "TO_EXTERNAL"
+                    ]
+                }
+            }
+        },
+        "GetAccountsListResponse": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/AccountResponse"
+            }
+        },
+        "GetTransactionsListResponse": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/TransactionResponse"
+            }
+        },
+        "GetUsersListResponse": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/UserResponse"
+            }
+        },
+        "InternalTransferProperties": {
+            "required": [
+                "amountInCents"
+            ],
+            "properties": {
+                "amountInCents": {
+                    "type": "integer"
+                },
+                "description": {
+                    "type": "string"
+                }
+            }
+        },
+        "TransactionResponse": {
+            "required": [
+                "transactionId",
+                "amountInCents",
+                "description",
+                "fromAccountType",
+                "fromAccountNumber",
+                "fromRoutingNumber",
+                "toAccountType",
+                "toAccountNumber",
+                "toRoutingNumber",
+                "createdAt",
+                "updatedAt"
+            ],
+            "properties": {
+                "transactionId": {
+                    "type": "integer"
+                },
+                "amountInCents": {
+                    "type": "integer"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "fromAccountType": {
+                    "type": "string",
+                    "enum": [
+                        "ATM",
+                        "DEBIT",
+                        "EXTERNAL",
+                        "INTERNAL"
+                    ]
+                },
+                "fromAccountNumber": {
+                    "type": "integer"
+                },
+                "fromRoutingNumber": {
+                    "type": "integer"
+                },
+                "toAccountType": {
+                    "type": "string",
+                    "enum": [
+                        "ATM",
+                        "DEBIT",
+                        "EXTERNAL",
+                        "INTERNAL"
+                    ]
+                },
+                "toAccountNumber": {
+                    "type": "integer"
+                },
+                "toRoutingNumber": {
+                    "type": "integer"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "UserPatchProperties": {
+            "properties": {
+                "firstName": {
+                    "type": "string"
+                },
+                "lastName": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                }
+            }
+        },
+        "UserPostProperties": {
+            "required": [
+                "firstName",
+                "lastName",
+                "email"
+            ],
+            "properties": {
+                "firstName": {
+                    "type": "string"
+                },
+                "lastName": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                }
+            }
+        },
+        "UserResponse": {
+            "required": [
+                "userId",
+                "firstName",
+                "lastName",
+                "email",
+                "createdAt",
+                "updatedAt"
+            ],
+            "properties": {
+                "userId": {
+                    "type": "integer"
+                },
+                "firstName": {
+                    "type": "string"
+                },
+                "lastName": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "ErrorResponse": {
+            "required": [
+                "message"
+            ],
+            "properties": {
+                "message": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
